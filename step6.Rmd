@@ -30,6 +30,19 @@ For this project, we used a dataset found on Kaggle.com provided by user Aditya 
 
 Additionally, the data set contains files with premade subsets of above mentioned car brands, for example *coclass.csv*, which contains only listings for the Mercedes model C Class. We chose to only utilize the unfiltered datasets.
 
+Apart from the car brand, there are a number of other attributes available for each data entry.
+
+* car model
+* year of first registration
+* transmission type
+* mileage
+* fuel type
+* tax
+* miles per gallon of fuel
+* engine size
+
+as well as the target variable price.
+
 # Business Understanding
 
 ## a. Scenario
@@ -39,40 +52,40 @@ A group of entrepreneurs in the used car business want to counteract the ongoing
 
 ## b. Business Objectives
 
-The business objectives are:
+The business objectives is iin short:
+
+**What is the expected value of a used car based on the given data entries?**
+
+Answering this question helps the platform in multiple ways.
 
 * make it more convenient for customers to sell their used car but getting an accurate first estimate right after entering the data
-* increase revenues by missing out on fewer chances to buy used cars (more cars resold via the plattform instead of directly to other buyers)
+* increase revenues by missing out on fewer chances to buy used cars (more cars resold via the platform instead of directly to other buyers)
 * speed up final evaluation of car value by offering a good starting point
 * base offers made to customers on true market values
 
-## Business Success Criteria
+## c. Business Success Criteria
 
-The following criterium needs to be met by the predicion:
+The following criteria need to be met by the prediction:
+
+* The estimate should lead to a conversion rate of more than 30%, meaning that at least 30% of the users that enter their car data on the website actually proceed to sell their car on the platform.
+
+* The estimations should never lead to an effective loss for the company. Therefore, estimations that are too high need to be avoided.
+
+
+## d. Data Mining Goals
+
+In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above. 
+
+## e. Data Mining Success Criteria
+
+Regarding the result of the estimation, one important success criterion is:
 
 * The estimate needs to be within a range of the actual price +/- 10% for 95% of the estimations made.
 
 This is important because estimates that are further off the actual price may lead to:
 
-* People aborting the process when the estimate is much lower than their expactation
+* People aborting the process when the estimate is much lower than their expectation
 * People entering the negotiations with far inflated expectation, effectively reducing the changes of the platform owners to score a good deal
-
-
-## Data Mining Goals
-
-
-## Data Mining Success Criteria
-
-
-
-Offering this service
-
-a. Define and describe a scenario in which a business analytics task based on the data set you identified should be solved
-b. Define and describe the Business Objectives
-c. Define and describe the Business Success Criteria
-d. Define and describe the Data Mining Goals
-e. Define and describe the Data Mining Success Criteria
-
 
 
 Citation example.[@Aditya]
@@ -88,8 +101,22 @@ plot(pressure)
 ```
 
 
-## Data Understanding
-Insert content here.
+# Data Understanding
+In the following section, a data description report containing data types, statistical properties, data quality aspects as well as a visual exploration of data properties is presented.
+
+## Data Types
+The attributes in the data set have the data types shown in **Table \@ref(tab:table-datatypes).**
+
+```{r echo=FALSE}
+Attribute <- c("model", "year", "transmission", "mileage", "fuelType", "tax", "mpg", "engineSize", "price");
+Type <- c("String, nominal", "Integer, interval", "String, nominal", "Integer, ratio", "String, nominal", "Integer, ratio", "Float, ratio", "Float, ratio", "Integer, ratio")
+data_types <- data.frame(Attribute, Type)
+```
+
+```{r table-datatypes, echo=FALSE}
+data_types %>%
+  knitr::kable(format = "latex", booktabs = TRUE, caption = "Data Types of the source data")
+```
 
 Data Description Report presenting
 a. Data types,
@@ -103,18 +130,23 @@ Table example.
 iris %>%
   select(-Species) %>%
   head(10) %>%
-  knitr::kable(format = "latex", booktabs = TRUE, caption = "The favorite iris' of Tenacious D.")
+  knitr::kable(format = "latex", booktabs = TRUE, caption = "Example Table Showcasing capabilities")
 ```
 
-## Data Preparation report
+
+
+# Data Preparation report
 Insert content here.
 
 a. Analyze options and potential for derived attributes (note: if the potential is considered low, these obviously do not necessarily have to be applied for your analysis, but options should be documented)
 b. Analyze options for additional external data sources, attributes that might be useful to better address the business objectives or data mining goals (Note: this description may be hypothetical, i.e. you are not necessarily required to actually obtain and integrate the external data for the analysis)
+
+#### e.g. Car Horse Power
+
 c. Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g. data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, ...) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
 
 
-## Modeling
+# Modeling
 Insert content here.
 
 a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
@@ -125,7 +157,7 @@ d. Train the model on the training set and comparing the performance on the vali
 e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
 
 
-## Evaluation
+# Evaluation
 Insert content here.
 
 a. Apply the final model on the test data and document performance.
@@ -137,7 +169,7 @@ d. Compare the performance achieved with the benchmark and baseline performances
 e. Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
 
 
-## Deployment
+# Deployment
 Insert content here.
 
 a. Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, ...) as well as recommendations for subsequent analysis.
@@ -146,7 +178,7 @@ c. Document aspects to be monitored during deployment, specifying triggers that 
 d. Briefly re-visit reproducibility aspects reflecting on aspects well documented and those that might pose a risk in terms of reproducibility based solely on the information provided in this report
 
 
-## Summary of findings
+# Summary of findings
 Insert content here.
 
 
