@@ -13,6 +13,11 @@ bibliography: my-bibliography.bib
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
+
+# Loading Data from CSV files
+car_data <- list.files(path = "data/", pattern = "*.csv", full.names = TRUE) %>% 
+  lapply(read_csv) %>%   
+  bind_rows
 ```
 
 # Introduction
@@ -104,7 +109,7 @@ plot(pressure)
 # Data Understanding
 In the following section, a data description report containing data types, statistical properties, data quality aspects as well as a visual exploration of data properties is presented.
 
-## Data Types
+## a. Data Types
 The attributes in the data set have the data types shown in **Table \@ref(tab:table-datatypes).**
 
 ```{r echo=FALSE}
@@ -116,6 +121,13 @@ data_types <- data.frame(Attribute, Type)
 ```{r table-datatypes, echo=FALSE}
 data_types %>%
   knitr::kable(format = "latex", booktabs = TRUE, caption = "Data Types of the source data")
+```
+
+
+## b. Statistical Properties
+
+```{r}
+
 ```
 
 Data Description Report presenting
