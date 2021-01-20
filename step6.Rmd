@@ -14,10 +14,34 @@ bibliography: my-bibliography.bib
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
 
-# Loading Data from CSV files
-car_data <- list.files(path = "data/", pattern = "*.csv", full.names = TRUE) %>% 
-  lapply(read_csv) %>%   
-  bind_rows
+audi <- read_csv("data/audi.csv")
+audi['brand'] = "Audi"
+
+bmw <- read_csv("data/bmw.csv")
+bmw['brand'] = "BMW"
+
+ford <- read_csv("data/ford.csv")
+ford['brand'] = "Ford"
+
+hyundi <- read_csv("data/hyundi.csv")
+hyundi['brand'] = "Hyundai"
+
+merc <- read_csv("data/merc.csv")
+merc['brand'] = "Mercedes"
+
+skoda <- read_csv("data/skoda.csv")
+skoda['brand'] = "Skoda"
+
+toyota <- read_csv("data/toyota.csv")
+toyota['brand'] = "Toyota"
+
+vauxhall <- read_csv("data/vauxhall.csv")
+vauxhall['brand'] = "Vauxhall"
+
+vw <- read_csv("data/vw.csv")
+vw['brand'] = "VW"
+
+car_data <- rbind(audi, bmw, ford, hyundi, merc, skoda, toyota, vauxhall, vw)
 ```
 
 # Introduction
@@ -126,8 +150,9 @@ data_types %>%
 
 ## b. Statistical Properties
 
-```{r}
+```{r echo=FALSE}
 
+car_data$
 ```
 
 Data Description Report presenting
