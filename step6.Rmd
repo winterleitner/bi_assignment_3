@@ -13,6 +13,7 @@ bibliography: my-bibliography.bib
 
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
+library(ggplot2)
 
 audi <- read_csv("data/audi.csv")
 audi['brand'] = "Audi"
@@ -152,7 +153,7 @@ data_types %>%
 
 ```{r echo=FALSE}
 
-car_data$
+car_data
 ```
 
 Data Description Report presenting
@@ -160,6 +161,20 @@ a. Data types,
 b. Statistical properties
 c. Data Quality aspects
 d. Visual Exploration of data properties and hypotheses
+
+## d. Visual Exploration
+
+In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
+
+```{r figure-boxplots, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="This is how great Tribute gets over time"}
+par(mfcol = c(1, 5), mai=c(0.3,0.3,0.3,0.1), cex = 0.7)
+boxplot(car_data$engineSize, main="Engine Size")
+boxplot(car_data$mileage, main="Mileage")
+boxplot(car_data$price, main="Price")
+boxplot(car_data$mpg, main="MPG")
+boxplot(car_data$tax, main="Tax")
+```
+
 
 Table example.
 
