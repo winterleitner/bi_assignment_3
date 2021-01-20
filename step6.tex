@@ -236,20 +236,14 @@ price & Integer, ratio\\
 \subsection{b. Statistical Properties}\label{b.-statistical-properties}}
 
 \begin{verbatim}
-## # A tibble: 99,187 x 10
-##    model  year price transmission mileage fuelType   tax   mpg engineSize brand
-##    <chr> <dbl> <dbl> <chr>          <dbl> <chr>    <dbl> <dbl>      <dbl> <chr>
-##  1 A1     2017 12500 Manual         15735 Petrol     150  55.4        1.4 Audi 
-##  2 A6     2016 16500 Automatic      36203 Diesel      20  64.2        2   Audi 
-##  3 A1     2016 11000 Manual         29946 Petrol      30  55.4        1.4 Audi 
-##  4 A4     2017 16800 Automatic      25952 Diesel     145  67.3        2   Audi 
-##  5 A3     2019 17300 Manual          1998 Petrol     145  49.6        1   Audi 
-##  6 A1     2016 13900 Automatic      32260 Petrol      30  58.9        1.4 Audi 
-##  7 A6     2016 13250 Automatic      76788 Diesel      30  61.4        2   Audi 
-##  8 A4     2016 11750 Manual         75185 Diesel      20  70.6        2   Audi 
-##  9 A3     2015 10200 Manual         46112 Petrol      20  60.1        1.4 Audi 
-## 10 A1     2016 12000 Manual         22451 Petrol      30  55.4        1.4 Audi 
-## # ... with 99,177 more rows
+## [1] 39176
+\end{verbatim}
+
+\begin{verbatim}
+## # A tibble: 1 x 10
+##   brand model   year price transmission mileage fuelType   tax   mpg engineSize
+##   <chr> <chr>  <dbl> <dbl> <chr>          <dbl> <chr>    <dbl> <dbl>      <dbl>
+## 1 Ford  Fiesta  2060  6495 Automatic      54807 Petrol     205  42.8        1.4
 \end{verbatim}
 
 Data Description Report presenting
@@ -264,7 +258,16 @@ d.~Visual Exploration of data properties and hypotheses
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
 \begin{figure}
-\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/figure-boxplots-1} \caption{This is how great Tribute gets over time}\label{fig:figure-boxplots}
+\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/figure-boxplots-1} \caption{Boxplots on the distribution of the numeric attributes}\label{fig:figure-boxplots}
+\end{figure}
+
+There are a few things we can learn from these initial diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at \textbf{Figure \ref{fig:car-age}}, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old.
+
+\begin{figure}
+\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/car-age-1} \caption{Histogram of car age.}\label{fig:car-age}
+\end{figure}
+\begin{figure}
+\includegraphics[width=0.98\textwidth]{step6_files/figure-latex/pairs-numeric-1} \caption{Pairs of all numeric attributes}\label{fig:pairs-numeric}
 \end{figure}
 
 Table example.
