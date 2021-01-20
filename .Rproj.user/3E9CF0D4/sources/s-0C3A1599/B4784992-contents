@@ -5,8 +5,8 @@ output:
     keep_tex: true
     citation_package: natbib
     fig_caption: true
-title: This is the Greatest and Best Paper in the World (Tribute)
-abstract: This is the greatest and best abstract in the world. Tribute.
+title: Predicting the resale value of used cars
+abstract: This is Assignment 3 in Business Intelligence @ TU Wien in the winter term of 2020.
 bibliography: my-bibliography.bib
 
 ---
@@ -16,7 +16,10 @@ library(tidyverse)
 ```
 
 # Introduction
-"Tribute" is the first single of Tenacious D's self-titled debut album[@Cowan1988; @Whittaker2016-time-info]. It was released July 16, 2002. The song is a tribute to what Gass and Black refer to as "The Greatest Song in the World" (often confused as the song's title), which Tenacious D themselves came up with, but have since forgotten. It was released as a downloadable track for Rock Band in addition to appearing as a playable track for Guitar Hero Live.[@Hume1748]
+For this project, we used a dataset found on Kaggle.com provided by user Aditya [@Aditya]. It contains a collection of different used car listings obtained by searching through online marketplaces using a web scraper. The dataset is split into different files, one per car brand. The brands for which data is available are:
+
+* Audi
+* BMW
 
 # History
 Tribute was the first song Black and Gass played live as Tenacious D. The song, like many other songs that were recorded on Tenacious D, was originally performed on their short-lived HBO TV series. During earlier performances of this song Kyle Gass played the opening to "Stairway to Heaven". The two songs are both in A minor and have very similar chord progressions, and critics have said the songs sound alike.[@Cowan1988; @Gluck2005; @Wardak2002] **The maturation of the song over time is shown in Figure \@ref(fig:tribute-plot).**
