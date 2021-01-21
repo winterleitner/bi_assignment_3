@@ -241,9 +241,9 @@ price & Integer, ratio\\
 
 \begin{verbatim}
 ## # A tibble: 1 x 10
-##   brand model   year price transmission mileage fuelType   tax   mpg engineSize
-##   <chr> <chr>  <dbl> <dbl> <chr>          <dbl> <chr>    <dbl> <dbl>      <dbl>
-## 1 Ford  Fiesta  2060  6495 Automatic      54807 Petrol     205  42.8        1.4
+##   brand model   year transmission mileage fuelType   tax   mpg engineSize price
+##   <chr> <chr>  <dbl> <chr>          <dbl> <chr>    <dbl> <dbl>      <dbl> <dbl>
+## 1 Ford  Fiesta  2060 Automatic      54807 Petrol     205  42.8        1.4  6495
 \end{verbatim}
 
 Data Description Report presenting
@@ -257,9 +257,9 @@ d.~Visual Exploration of data properties and hypotheses
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
-\begin{figure}
-\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/figure-boxplots-1} \caption{Boxplots on the distribution of the numeric attributes}\label{fig:figure-boxplots}
-\end{figure}
+\begin{figure*}
+\includegraphics[width=0.98\textwidth]{step6_files/figure-latex/figure-boxplots-1} \caption{Boxplots on the distribution of the numeric attributes}\label{fig:figure-boxplots}
+\end{figure*}
 
 There are a few things we can learn from these initial diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at \textbf{Figure \ref{fig:car-age}}, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old.
 
@@ -267,7 +267,7 @@ There are a few things we can learn from these initial diagrams. For example, it
 \includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/car-age-1} \caption{Histogram of car age.}\label{fig:car-age}
 \end{figure}
 \begin{figure}
-\includegraphics[width=0.98\textwidth]{step6_files/figure-latex/pairs-numeric-1} \caption{Pairs of all numeric attributes}\label{fig:pairs-numeric}
+\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/pairs-numeric-1} \caption{Pairs of all numeric attributes}\label{fig:pairs-numeric}
 \end{figure}
 
 Table example.

@@ -172,7 +172,7 @@ d. Visual Exploration of data properties and hypotheses
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
-```{r figure-boxplots, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Boxplots on the distribution of the numeric attributes"}
+```{r figure-boxplots, echo=FALSE, out.width='0.98\\textwidth', fig.env='figure*', fig.cap="Boxplots on the distribution of the numeric attributes"}
 par(mfcol = c(1, 5), mai=c(0.3,0.3,0.3,0.1), cex = 0.7)
 boxplot(car_data$engineSize, main="Engine Size")
 boxplot(car_data$mileage, main="Mileage")
@@ -186,7 +186,7 @@ There are a few things we can learn from these initial diagrams. For example, it
 ```{r car-age, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Histogram of car age."}
 hist(2020-car_data$year[car_data$year <= 2020], xlim= c(0,30), main="Histogram of car age")
 ```
-```{r, pairs-numeric, echo=FALSE, out.width='0.98\\textwidth', fig.cap="Pairs of all numeric attributes"}
+```{r, pairs-numeric, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
 ggcorrplot(cor(data.matrix(car_data)))
 ```
 
