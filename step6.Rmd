@@ -447,7 +447,8 @@ par(mfcol = c(1, 1))
 ```
 
 ```{r}
-summary(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
+summary(abs((cleaned_test_data$price -
+    gam_pred)/cleaned_test_data$price))
 ```
 
 
@@ -472,20 +473,31 @@ data.frame(model = c("GLM (w/o car model)", "GLM ", "GAM"), R_square = rsquares 
 
 # Evaluation
 
-As final evaluation of the model the validation set is used.
-Since the validation set was not utilised until now, neither the model or its parameters are optimised for it. It can be seen as a simulation of new data being applied to it.
-```{r}
+```{r, echo=FALSE, include=FALSE}
 # Evaluate models
-gam_pred_val <- gam_model %>% predict(cleaned_validate_data)
+gam_pred_val <- gam_model %>%
+  predict(cleaned_validate_data)
 
 mean(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$price))
-boxplot(cleaned_validate_data$price - gam_pred_val)
-
-summary(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$price))
 ```
 
-b. Re-train the model with identical hyper-parameters using the full train and validation data and again apply it on the test data, documenting the performance
-## Retraining with train and test data
+As final evaluation of the model the validation set is used.
+Since the validation set was not utilized until now, neither the model or its parameters are optimized for it. It can be seen as a simulation of new data being applied to it. The mean relative error is `r mean(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$price))` which is above the data mining success criterion.
+
+The boxplot in **Figure \@ref(fig:evaluationBoxplot)** shows the errors for the validation set with GAM predictions.
+
+```{r, evaluationBoxplot, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
+boxplot(cleaned_validate_data$price - gam_pred_val)
+```
+
+The boxplot data in numbers:
+```{r echo=FALSE}
+summary(abs((cleaned_validate_data$price -
+  gam_pred_val)/cleaned_validate_data$price))
+```
+
+## b. Retraining with train and test data
+
 To further evaluate the model it is now trained utilising all exept the validation data set.
 ```{r}
 gam_model_eval <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = rbind(train_data,cleaned_test_data))
