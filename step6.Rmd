@@ -16,6 +16,7 @@ library(tidyverse)
 library(ggplot2)
 library(GGally)
 library(ggcorrplot)
+library(mgcv)
 
 audi <- read_csv("data/audi.csv")
 audi['brand'] = "Audi"
@@ -241,47 +242,6 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 
 # Modeling
-Insert content here.
-```{r, echo=FALSE, include=FALSE}
-trainsample <- sample(seq_len(nrow(car_data)),size = floor(0.75 * nrow(car_data)))
-
-formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
-formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
-
-# encountered issue -> depending on the training and testing set it can be that one model is newly introduced in the testset which is not presen in the training set.
-# This could also happen in the daily use of the system when new carmodels are introduces. How can this be handeld?
-# Looking at the correlation matrix, the model of a car does not have high correlation with the price
-
-# Analysing data on the carmodels
-barplot(prop.table(table(car_data$model)))
-head(sort(table(car_data$model),decreasing = TRUE),5)
-tail(sort(table(car_data$model),decreasing = TRUE),5)
-# reveals that some carmodels are only present once in the datamodel
-
-# Carmodels missing in the trainingdata
-missing_fact <- setdiff(unique(car_data[-trainsample,]$model), unique(car_data[trainsample,]$model))
-testing_data <- car_data[-trainsample,]
-cleaned_testing_data <- testing_data[!testing_data$model %in% missing_fact,]
-
-# glm
-glm_model <- lm(formula2,data = car_data[trainsample,])
-glm_pred <- predict(glm_model,cleaned_testing_data)
-
-# decision tree
-
-# library(rpart)
-# tree_model <- rpart(formula2,method = "anova", data = car_data[trainsample,])
-# tree_pred <- predict(tree_model, cleaned_testing_data)
-
-library(mgcv)
-# Build the model
-gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = car_data[trainsample,])
-# Make predictions
-gam_pred <- gam_model %>% predict(cleaned_testing_data)
-
-
-
-```
 
 a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
 
@@ -298,16 +258,97 @@ Choosing a linear regression model leaves open the possibility to modify the for
 
 c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
 
-While dividing the data in train and test, some scarse carmodel, meaning of low quantities up to being unique, 
+
+Dividin the data train, validation and test set. In the ratio:
+* train: 70%
+* validate: 15%
+* test: 15%
+
+To ensure rproducability a seed is set.
+
+```{r}
+set.seed(1)
+assignment <- sample(1:3,nrow(car_data),prob = c(0.7,0.15,0.15), replace = TRUE)
+
+train_data <- car_data[assignment==1,]
+test_data <- car_data[assignment==2,]
+validate_data <- car_data[assignment==3,]
+```
+
+Splitting the data in train, test and validation samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
+Further thoughtprocess on this matter in regards of usability in business are present in **ADD REFERENCE HERE!**
+
+```{r out.width='0.98\\columnwidth'}
+# Analysing data on the carmodels
+head(sort(table(car_data$model),decreasing = TRUE),5)
+tail(sort(table(car_data$model),decreasing = TRUE),5)
+# reveals that some carmodels are only present once in the datamodel
+
+# Carmodels missing in the trainingdata
+missing_fact_test <- setdiff(unique(test_data$model), unique(train_data$model))
+missing_fact_validate <- setdiff(unique(validate_data$model), unique(train_data$model))
+
+cleaned_test_data <- test_data[!test_data$model %in% missing_fact_test,]
+cleaned_validate_data <- validate_data[!validate_data$model %in% missing_fact_validate,]
+```
 
 d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
 
+```{r, echo=FALSE, include=FALSE}
+
+formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
+formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
+
+# encountered issue -> depending on the training and testing set it can be that one model is newly introduced in the testset which is not presen in the training set.
+# This could also happen in the daily use of the system when new carmodels are introduces. How can this be handeld?
+# Looking at the correlation matrix, the model of a car does not have high correlation with the price
+
+
+
+# glm
+glm_model <- lm(formula2,data = train_data)
+glm_pred <- predict(glm_model,cleaned_test_data)
+
+# decision tree
+# library(rpart)
+# tree_model <- rpart(formula2,method = "anova", data = car_data[trainsample,])
+# tree_pred <- predict(tree_model, cleaned_testing_data)
+
+# Build the model
+gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = train_data)
+# Make predictions
+gam_pred <- gam_model %>% predict(cleaned_test_data)
+```
+
+
 e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
+
+
 
 ```{r}
 # summary
 summary(glm_model)$r.squared
 summary(gam_model)$r.sq
+```
+
+```{r}
+
+plot(cleaned_test_data$price,glm_pred)
+plot(cleaned_test_data$price,gam_pred)
+
+hist(cleaned_test_data$price-glm_pred,breaks = 200)
+hist(cleaned_test_data$price-gam_pred,breaks = 200)
+
+mean(abs((cleaned_test_data$price - glm_pred)/cleaned_test_data$price))
+boxplot(cleaned_test_data$price - glm_pred)
+
+# mean(abs(cleaned_testing_data$price - tree_pred))
+# hist(abs(cleaned_testing_data$price - tree_pred),200)
+
+mean(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
+boxplot(cleaned_test_data$price - gam_pred)
+
+summary(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
 ```
 
 # Evaluation
@@ -317,22 +358,12 @@ a. Apply the final model on the test data and document performance.
 
 ```{r}
 # Evaluate models
-plot(cleaned_testing_data$price,glm_pred)
-plot(cleaned_testing_data$price,gam_pred)
+gam_pred_val <- gam_model %>% predict(cleaned_validate_data)
 
-hist(cleaned_testing_data$price-glm_pred,breaks = 200)
-hist(cleaned_testing_data$price-gam_pred,breaks = 200)
+mean(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$price))
+boxplot(cleaned_validate_data$price - gam_pred_val)
 
-mean(abs((cleaned_testing_data$price - glm_pred)/cleaned_testing_data$price))
-boxplot(cleaned_testing_data$price - glm_pred)
-
-# mean(abs(cleaned_testing_data$price - tree_pred))
-# hist(abs(cleaned_testing_data$price - tree_pred),200)
-
-mean(abs((cleaned_testing_data$price - gam_pred)/cleaned_testing_data$price))
-boxplot(cleaned_testing_data$price - gam_pred)
-
-summary(abs((cleaned_testing_data$price - gam_pred)/cleaned_testing_data$price))
+summary(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$price))
 ```
 
 b. Re-train the model with identical hyper-parameters using the full train and validation data and again apply it on the test data, documenting the performance

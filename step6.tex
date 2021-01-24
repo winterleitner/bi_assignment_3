@@ -422,8 +422,6 @@ Insert content here.
 \hypertarget{modeling}{%
 \section{Modeling}\label{modeling}}
 
-Insert content here.
-
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \tightlist
@@ -455,7 +453,74 @@ Choosing a linear regression model leaves open the possibility to modify the for
   Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g.~time series data) and relative sizes of the respective subsets.
 \end{enumerate}
 
-While dividing the data in train and test, some scarse carmodel, meaning of low quantities up to being unique,
+Dividin the data train, validation and test set. In the ratio:
+* train: 70\%
+* validate: 15\%
+* test: 15\%
+
+To ensure rproducability a seed is set.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{assignment <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{,}\KeywordTok{nrow}\NormalTok{(car_data),}\DataTypeTok{prob =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.7}\NormalTok{,}\FloatTok{0.15}\NormalTok{,}\FloatTok{0.15}\NormalTok{), }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
+
+\NormalTok{train_data <-}\StringTok{ }\NormalTok{car_data[assignment}\OperatorTok{==}\DecValTok{1}\NormalTok{,]}
+\NormalTok{test_data <-}\StringTok{ }\NormalTok{car_data[assignment}\OperatorTok{==}\DecValTok{2}\NormalTok{,]}
+\NormalTok{validate_data <-}\StringTok{ }\NormalTok{car_data[assignment}\OperatorTok{==}\DecValTok{3}\NormalTok{,]}
+\end{Highlighting}
+\end{Shaded}
+
+Splitting the data in train, test and validate samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validating samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
+Further thoughtprocess on this matter in regards of usability in business are present in \textbf{ADD REFERENCE HERE!}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Analysing data on the carmodels}
+\KeywordTok{barplot}\NormalTok{(}\KeywordTok{prop.table}\NormalTok{(}\KeywordTok{table}\NormalTok{(car_data}\OperatorTok{$}\NormalTok{model)))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/unnamed-chunk-7-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(}\KeywordTok{sort}\NormalTok{(}\KeywordTok{table}\NormalTok{(car_data}\OperatorTok{$}\NormalTok{model),}\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{),}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  Fiesta    Golf   Focus C Class   Corsa 
+##    6557    4863    4588    3747    3441
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{tail}\NormalTok{(}\KeywordTok{sort}\NormalTok{(}\KeywordTok{table}\NormalTok{(car_data}\OperatorTok{$}\NormalTok{model),}\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{),}\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##           Amica          Escort          Ranger 
+##               1               1               1 
+##             RS7 Transit Tourneo 
+##               1               1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# reveals that some carmodels are only present once in the datamodel}
+
+\CommentTok{# Carmodels missing in the trainingdata}
+\NormalTok{missing_fact_test <-}\StringTok{ }\KeywordTok{setdiff}\NormalTok{(}\KeywordTok{unique}\NormalTok{(test_data}\OperatorTok{$}\NormalTok{model), }\KeywordTok{unique}\NormalTok{(train_data}\OperatorTok{$}\NormalTok{model))}
+\NormalTok{missing_fact_validate <-}\StringTok{ }\KeywordTok{setdiff}\NormalTok{(}\KeywordTok{unique}\NormalTok{(validate_data}\OperatorTok{$}\NormalTok{model), }\KeywordTok{unique}\NormalTok{(train_data}\OperatorTok{$}\NormalTok{model))}
+
+\NormalTok{cleaned_test_data <-}\StringTok{ }\NormalTok{test_data[}\OperatorTok{!}\NormalTok{test_data}\OperatorTok{$}\NormalTok{model }\OperatorTok{%in%}\StringTok{ }\NormalTok{missing_fact_test,]}
+\NormalTok{cleaned_validate_data <-}\StringTok{ }\NormalTok{validate_data[}\OperatorTok{!}\NormalTok{validate_data}\OperatorTok{$}\NormalTok{model }\OperatorTok{%in%}\StringTok{ }\NormalTok{missing_fact_validate,]}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
@@ -474,7 +539,7 @@ While dividing the data in train and test, some scarse carmodel, meaning of low 
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.8616297
+## [1] 0.866457
 \end{verbatim}
 
 \begin{Shaded}
@@ -484,7 +549,89 @@ While dividing the data in train and test, some scarse carmodel, meaning of low 
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.8977207
+## [1] 0.9018316
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price,glm_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price,gam_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{glm_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{gam_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_test_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}\OperatorTok{/}\NormalTok{cleaned_test_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1768322
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# mean(abs(cleaned_testing_data$price - tree_pred))}
+\CommentTok{# hist(abs(cleaned_testing_data$price - tree_pred),200)}
+
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_test_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_test_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1508483
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(cleaned_test_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-10-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_test_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_test_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##  0.000014  0.046277  0.099755  0.150848  0.183024 18.667155
 \end{verbatim}
 
 \hypertarget{evaluation}{%
@@ -502,84 +649,33 @@ Insert content here.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Evaluate models}
-\KeywordTok{plot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price,glm_pred)}
-\end{Highlighting}
-\end{Shaded}
+\NormalTok{gam_pred_val <-}\StringTok{ }\NormalTok{gam_model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{predict}\NormalTok{(cleaned_validate_data)}
 
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price,gam_pred)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-2.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{hist}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{glm_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-3.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{hist}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{gam_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-4.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_validate_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred_val)}\OperatorTok{/}\NormalTok{cleaned_validate_data}\OperatorTok{$}\NormalTok{price))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1845947
+## [1] 0.1458963
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{boxplot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}
+\KeywordTok{boxplot}\NormalTok{(cleaned_validate_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred_val)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-5.pdf}
+\includegraphics{step6_files/figure-latex/unnamed-chunk-11-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# mean(abs(cleaned_testing_data$price - tree_pred))}
-\CommentTok{# hist(abs(cleaned_testing_data$price - tree_pred),200)}
-
-\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 0.1548243
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{boxplot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{step6_files/figure-latex/unnamed-chunk-8-6.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_validate_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred_val)}\OperatorTok{/}\NormalTok{cleaned_validate_data}\OperatorTok{$}\NormalTok{price))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-##  0.000001  0.047087  0.102419  0.154824  0.183197 29.757699
+##  0.000007  0.046739  0.101092  0.145896  0.180065 27.950226
 \end{verbatim}
 
 \begin{enumerate}
