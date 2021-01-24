@@ -5,6 +5,47 @@
 \renewcommand\footnotetextcopyrightpermission[1]{}
 \settopmatter{printfolios=true}
 
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+
 \usepackage{booktabs} % For formal tables
 
 % Copyright
@@ -150,7 +191,7 @@ Answering this question helps the platform in multiple ways.
 \end{itemize}
 
 \hypertarget{c.-business-success-criteria}{%
-\subsection{c. Business Success Criteria}\label{c.-business-success-criteria}}
+\subsection{c.~Business Success Criteria}\label{c.-business-success-criteria}}
 
 The following criteria need to be met by the prediction:
 
@@ -162,7 +203,7 @@ The following criteria need to be met by the prediction:
 \end{itemize}
 
 \hypertarget{d.-data-mining-goals}{%
-\subsection{d. Data Mining Goals}\label{d.-data-mining-goals}}
+\subsection{d.~Data Mining Goals}\label{d.-data-mining-goals}}
 
 In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above.
 
@@ -174,7 +215,7 @@ Regarding the result of the estimation, one important success criterion is:
 \begin{itemize}
 \tightlist
 \item
-  The estimate needs to be within a range of the actual price +/- 10\% for 95\% of the estimations made.
+  The estimate needs to be within a range of the actual price +/- 15\% for 95\% of the estimations made.
 \end{itemize}
 
 This is important because estimates that are further off the actual price may lead to:
@@ -186,19 +227,6 @@ This is important because estimates that are further off the actual price may le
 \item
   People entering the negotiations with far inflated expectation, effectively reducing the changes of the platform owners to score a good deal
 \end{itemize}
-
-Citation example.\citep{Aditya}
-Plot example.\textbf{The maturation of the song over time is shown in Figure \ref{fig:tribute-plot}.}
-
-\begin{figure}
-\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/tribute-plot-1} \caption{This is how great Tribute gets over time}\label{fig:tribute-plot}
-\end{figure}
-
-Small plot example.
-
-\begin{figure*}
-\includegraphics[width=0.98\textwidth]{step6_files/figure-latex/two-col-tribute-plot-1} \caption{This is a two-column plot of how great Tribute gets over time}\label{fig:two-col-tribute-plot}
-\end{figure*}
 
 \hypertarget{data-understanding}{%
 \section{Data Understanding}\label{data-understanding}}
@@ -219,11 +247,12 @@ The attributes in the data set have the data types shown in \textbf{Table \ref{t
 Attribute & Type\\
 \midrule
 model & String, nominal\\
-year & Integer, interval\\
+age & Integer, interval\\
+year & Integer, ratio\\
 transmission & String, nominal\\
 mileage & Integer, ratio\\
-fuelType & String, nominal\\
 \addlinespace
+fuelType & String, nominal\\
 tax & Integer, ratio\\
 mpg & Float, ratio\\
 engineSize & Float, ratio\\
@@ -235,25 +264,115 @@ price & Integer, ratio\\
 \hypertarget{b.-statistical-properties}{%
 \subsection{b. Statistical Properties}\label{b.-statistical-properties}}
 
-\begin{verbatim}
-## [1] 39176
-\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{width =} \DecValTok{60}\NormalTok{)}
+\KeywordTok{summary}\NormalTok{(car_data)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{verbatim}
-## # A tibble: 1 x 10
-##   brand model   year transmission mileage fuelType   tax   mpg engineSize price
-##   <chr> <chr>  <dbl> <chr>          <dbl> <chr>    <dbl> <dbl>      <dbl> <dbl>
-## 1 Ford  Fiesta  2060 Automatic      54807 Petrol     205  42.8        1.4  6495
+##     brand              model                year     
+##  Length:99187       Length:99187       Min.   :1970  
+##  Class :character   Class :character   1st Qu.:2016  
+##  Mode  :character   Mode  :character   Median :2017  
+##                                        Mean   :2017  
+##                                        3rd Qu.:2019  
+##                                        Max.   :2060  
+##  transmission          mileage         fuelType        
+##  Length:99187       Min.   :     1   Length:99187      
+##  Class :character   1st Qu.:  7425   Class :character  
+##  Mode  :character   Median : 17460   Mode  :character  
+##                     Mean   : 23059                     
+##                     3rd Qu.: 32339                     
+##                     Max.   :323000                     
+##       tax             mpg           engineSize   
+##  Min.   :  0.0   Min.   :  0.30   Min.   :0.000  
+##  1st Qu.:125.0   1st Qu.: 47.10   1st Qu.:1.200  
+##  Median :145.0   Median : 54.30   Median :1.600  
+##  Mean   :120.3   Mean   : 55.17   Mean   :1.663  
+##  3rd Qu.:145.0   3rd Qu.: 62.80   3rd Qu.:2.000  
+##  Max.   :580.0   Max.   :470.80   Max.   :6.600  
+##      price             age         
+##  Min.   :   450   Min.   :-40.000  
+##  1st Qu.:  9999   1st Qu.:  1.000  
+##  Median : 14495   Median :  3.000  
+##  Mean   : 16805   Mean   :  2.912  
+##  3rd Qu.: 20870   3rd Qu.:  4.000  
+##  Max.   :159999   Max.   : 50.000
 \end{verbatim}
 
-Data Description Report presenting
-a. Data types,
-b. Statistical properties
-c. Data Quality aspects
-d. Visual Exploration of data properties and hypotheses
+\hypertarget{c.-data-quality-aspects}{%
+\subsection{c.~Data Quality aspects}\label{c.-data-quality-aspects}}
 
-\hypertarget{d.-visual-exploration}{%
-\subsection{d. Visual Exploration}\label{d.-visual-exploration}}
+Since the data is recorded from the internet there is the possibility of it containing invalid information or missing values.
+
+To begin with, we check the data for missing values. However, in this speficic case, there are none.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dim}\NormalTok{(car_data) }\OperatorTok{==}\StringTok{ }
+\StringTok{  }\KeywordTok{dim}\NormalTok{(car_data[}\KeywordTok{complete.cases}\NormalTok{(car_data),])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE TRUE
+\end{verbatim}
+
+Next up, we check plausibility of some of the extreme cases of numerical values. To keep it short, we only included one exemplary output her and then summarize the findings.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{options}\NormalTok{(}\DataTypeTok{width =} \DecValTok{60}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(car_data[}\KeywordTok{order}\NormalTok{(car_data}\OperatorTok{$}\NormalTok{age),], }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 11
+##   brand model  year transmission mileage fuelType   tax
+##   <chr> <chr> <dbl> <chr>          <dbl> <chr>    <dbl>
+## 1 Ford  Fies~  2060 Automatic      54807 Petrol     205
+## 2 Audi  Q7     2020 Semi-Auto         10 Diesel     145
+## 3 Audi  Q5     2020 Semi-Auto         10 Petrol     145
+## 4 Audi  Q5     2020 Semi-Auto         10 Petrol     145
+## 5 Audi  A4     2020 Semi-Auto         10 Petrol     145
+## # ... with 4 more variables: mpg <dbl>, engineSize <dbl>,
+## #   price <dbl>, age <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# year 2060 is an error}
+
+\KeywordTok{head}\NormalTok{(car_data[}\KeywordTok{order}\NormalTok{(}\OperatorTok{-}\NormalTok{car_data}\OperatorTok{$}\NormalTok{age),], }\DecValTok{5}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 11
+##   brand model  year transmission mileage fuelType   tax
+##   <chr> <chr> <dbl> <chr>          <dbl> <chr>    <dbl>
+## 1 Merc~ M Cl~  1970 Automatic      14000 Diesel     305
+## 2 Vaux~ Zafi~  1970 Manual         37357 Petrol     200
+## 3 BMW   5 Se~  1996 Automatic      36000 Petrol     270
+## 4 Ford  Esco~  1996 Manual         50000 Petrol     265
+## 5 Audi  A8     1997 Automatic     122000 Petrol     265
+## # ... with 4 more variables: mpg <dbl>, engineSize <dbl>,
+## #   price <dbl>, age <dbl>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# the oldest cars seem realistic}
+\end{Highlighting}
+\end{Shaded}
+
+Most of the extreme values in the dataset were realistic. Some entries contain questionable combinations of age and mileage, unrealistically high or low MPG values or ``0'' engine sizes. In those cases, some filtering should be done.
+
+\hypertarget{d.-visual-exploration-of-data-properties-and-hypotheses}{%
+\subsection{d.~Visual Exploration of data properties and hypotheses}\label{d.-visual-exploration-of-data-properties-and-hypotheses}}
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
@@ -261,40 +380,19 @@ In the following figures, boxplots illustrate the ranges of the numeric (ratio) 
 \includegraphics[width=0.98\textwidth]{step6_files/figure-latex/figure-boxplots-1} \caption{Boxplots on the distribution of the numeric attributes}\label{fig:figure-boxplots}
 \end{figure*}
 
-There are a few things we can learn from these initial diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at \textbf{Figure \ref{fig:car-age}}, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old.
+There are a few things we can learn from these diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at \textbf{Figure \ref{fig:car-age}}, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old. There is 1 entry where the cars year is seemingly bigger than 2020, that is 2060, which will have to be dealt with in later steps.
 
 \begin{figure}
 \includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/car-age-1} \caption{Histogram of car age.}\label{fig:car-age}
 \end{figure}
 
+The correlation plot in \textbf{Figure \ref{fig:correlationmatrix}} shows some pretty good correlation between ther predictor variables and the price, so we might be able to create a solid regression using the data available.
+
 \begin{figure}
-\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/pairs-numeric-1} \caption{Pairs of all numeric attributes}\label{fig:pairs-numeric}
+\includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/correlationmatrix-1} \caption{Pairs of all numeric attributes}\label{fig:correlationmatrix}
 \end{figure}
 
-Table example.
-
-\begin{table}
-
-\caption{\label{tab:table-iris}Example Table Showcasing capabilities}
-\centering
-\begin{tabular}[t]{rrrr}
-\toprule
-Sepal.Length & Sepal.Width & Petal.Length & Petal.Width\\
-\midrule
-5.1 & 3.5 & 1.4 & 0.2\\
-4.9 & 3.0 & 1.4 & 0.2\\
-4.7 & 3.2 & 1.3 & 0.2\\
-4.6 & 3.1 & 1.5 & 0.2\\
-5.0 & 3.6 & 1.4 & 0.2\\
-\addlinespace
-5.4 & 3.9 & 1.7 & 0.4\\
-4.6 & 3.4 & 1.4 & 0.3\\
-5.0 & 3.4 & 1.5 & 0.2\\
-4.4 & 2.9 & 1.4 & 0.2\\
-4.9 & 3.1 & 1.5 & 0.1\\
-\bottomrule
-\end{tabular}
-\end{table}
+From the view point of a human estimating the value of a used car, the most influential attributes should be age, mileage and brand/model as well as general condition, which is however not part of our dataset. Looking at the correlation matrix, we see that there is indeed a significant correlation between price and age as well as mileage. For model and brand, the correlation is much lower.
 
 \hypertarget{data-preparation-report}{%
 \section{Data Preparation report}\label{data-preparation-report}}
@@ -310,15 +408,15 @@ Insert content here.
   Analyze options for additional external data sources, attributes that might be useful to better address the business objectives or data mining goals (Note: this description may be hypothetical, i.e.~you are not necessarily required to actually obtain and integrate the external data for the analysis)
 \end{enumerate}
 
-\hypertarget{e.g.car-horse-power}{%
-\paragraph{e.g.~Car Horse Power}\label{e.g.car-horse-power}}
+\hypertarget{e.g.-car-horse-power}{%
+\paragraph{e.g.~Car Horse Power}\label{e.g.-car-horse-power}}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots{}) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
+  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
 \end{enumerate}
 
 \hypertarget{modeling}{%
@@ -328,9 +426,9 @@ Insert content here.
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
-\tightlist
 \item
   Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
+  The goal is to estimate the price for a car based on it inputed characteristics.
 \item
   Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
 \item
@@ -366,7 +464,7 @@ Insert content here.
     the expected base-line performance of a trivial acceptor / rejecter or random classifier
   \end{enumerate}
 \item
-  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots{})
+  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots)
 \item
   Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
 \end{enumerate}
@@ -380,7 +478,7 @@ Insert content here.
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots{}) as well as recommendations for subsequent analysis.
+  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots) as well as recommendations for subsequent analysis.
 \item
   Consider and briefly document potential ethical aspects as well as impact assessment / risks identified in deployment
 \item
