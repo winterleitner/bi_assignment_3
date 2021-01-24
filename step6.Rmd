@@ -204,7 +204,7 @@ Most of the extreme values in the dataset were realistic. Some entries contain q
 
 ## d. Visual Exploration of data properties and hypotheses
 
-In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
+In the following figures, boxplots in **Figure \@ref(fig:figure-boxplots)** illustrate the ranges of the numeric (ratio) variables.
 
 ```{r figure-boxplots, echo=FALSE, out.width='0.98\\textwidth', fig.env='figure*', fig.cap="Boxplots on the distribution of the numeric attributes"}
 par(mfcol = c(1, 5), mai=c(0.3,0.3,0.3,0.1), cex = 0.7)
@@ -258,7 +258,8 @@ car_data <- car_data[car_data$age >= 0, ]
 Next, we filter a few rows that seem unrealistic in terms of mileage and age.
 
 ```{r}
-car_data <- car_data[!(car_data$mileage < 1000 & car_data$age > 5), ]
+car_data <- car_data[!(car_data$mileage < 1000 &
+                         car_data$age > 5), ]
 ```
 
 The filtering becomes a little more interesting for miles per gallon. A quick Internet research produced the following results. In 2020, new cars with a combustion engine should be able to achieve around 25 miles per gallon on average. Top performers among hybrid cars can manage up to around 60 miles per hour. Everything significantly higher than that is currently not possible. On the lower end, we looked up some high performance sports cars. Even for the most powerful cars like the Bugatti Chiron or the Lamborghini Aventador, fuel economy scores were around 10 miles per gallon.
@@ -291,11 +292,12 @@ types <- distinct(
   car_data, car_data$fuelType)[, 1]$`car_data$fuelType`
 for (type in types) {
   outliers <- boxplot(
-    car_data[car_data$fuelType == type, ]$mpg, plot=FALSE)$out
+    car_data[car_data$fuelType == type, ]$mpg,
+    plot=FALSE)$out
   
   if (length(outliers) > 0) {
-    car_data <- car_data[-which(car_data$mpg %in% outliers &
-                                  car_data$fuelType == type),]
+    car_data <- car_data[-which(car_data$mpg %in%
+          outliers &car_data$fuelType == type),]
   }
 }
 ```
@@ -303,8 +305,8 @@ This outlier removal procedure effectively filtered out `r old_length - nrow(car
 
 Next up, data entries where the fuel type indicates a combustion engine but the engine size is 0 are removed.
 ```{r}
-car_data <- car_data[!(car_data$engineSize == 0 &
-                         car_data$fuelType != "Electric"),]
+car_data <- car_data[!(car_data$engineSize == 0 
+          & car_data$fuelType != "Electric"),]
 ```
 
 Regarding the price outliers that seem unrealistic above, we could not find a satisfying solution. The data comes from online sources, and the prices are whatever the sellers them to. Therefore, in order to remove all of the outliers in terms of over- or undervaluation, an expert would have to look over every single entry to determine whether the price is justified. Therefore, we cannot even determine how many rows are affected and will simply assume that the prices are justified.
@@ -317,7 +319,7 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 # Modeling
 
-## Identify suitable data mining algorithms
+## a. Identify suitable data mining algorithms
 
 The goal, as stated by the data mining goal, is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning process for regression, the prediction of a continuous numerical value.
 When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
@@ -325,10 +327,10 @@ While complex regression models might deliver higher accuracies, they easily bec
 Generalized linear regression is the go to to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
 As linear relationship of the attributes and the prediction value cannot be assumed, an alternative regression model is implemented and compared: the Generalized additive models (gam). It is based on the idea to combine generalized linear models and additive models.
 
-## Hyper-parameters
+## b. Hyper-parameters
 Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
 
-## Data Split in train / validation / test set
+## c. Data Split in train / validation / test set
 
 Dividin the data train, validation and test set. In the ratio:
 
@@ -351,7 +353,7 @@ validate_data <- car_data[assignment == 3,]
 ```
 
 Splitting the data in train, test and validation samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
-Further thoughtprocess on this matter in regards of usability in business are present in **ADD REFERENCE HERE!**
+Further thought process on this matter in regards of usability in business are present in **ADD REFERENCE HERE!**
 
 ```{r out.width='0.98\\columnwidth'}
 # Analysing data on the carmodels
@@ -360,20 +362,34 @@ tail(sort(table(car_data$model),decreasing = TRUE),5)
 # reveals that some carmodels are only present once in the datamodel
 
 # Carmodels missing in the trainingdata
-missing_fact_test <- setdiff(unique(test_data$model), unique(train_data$model))
-missing_fact_validate <- setdiff(unique(validate_data$model), unique(train_data$model))
+missing_fact_test <- setdiff(
+  unique(test_data$model), unique(train_data$model))
+missing_fact_validate <- setdiff(
+  unique(validate_data$model), unique(train_data$model))
 
-cleaned_test_data <- test_data[!test_data$model %in% missing_fact_test,]
-cleaned_validate_data <- validate_data[!validate_data$model %in% missing_fact_validate,]
+cleaned_test_data <- test_data[!test_data$model
+    %in% missing_fact_test,]
+cleaned_validate_data <- validate_data[!validate_data$model
+    %in% missing_fact_validate,]
 ```
 
-## Model Traning and Parameter Setting
-d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
+## d. Model Traning and Parameter Setting
 
 As starting point for the regression model the linear regression model was taken without the addition of more elaborated parametetrisation. This already delivered a decent predicition accuracy.
 Regarding the previously mentioned issue with the scarse car models, we tested the predicitionbehaviour with and without making use of the car model as an attribute. To explore what it has on the prediciton.
 To measure the quality of a model the R-squared value is utilised. R-squared is describes the proportion of variation of the dependent value, that can be explained utilising the regression model. It gives a first performance value of the model before having to validate it utilising predictions. Furter performance comparisons are done using predictions with the validation set.
-```{r}
+
+```{r, echo=TRUE, results='hide'}
+# Example of prediction with car model
+formula <- price~brand+mpg+mileage+
+  year+transmission+fuelType+
+  tax+engineSize+model
+
+glm_model <- lm(formula,data = train_data)
+glm_pred <- predict(glm_model,cleaned_test_data)
+```
+
+```{r, echo=FALSE, include=FALSE}
 # without car model
 formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
 # with car model
@@ -399,9 +415,6 @@ While use of the linear regression model delivers good results, the linearity of
 The use of the gam model allows for the computation of smoothening factors in the formula which can result in an improved prediction.
 
 ```{r, echo=FALSE, include=FALSE}
-
-formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
-
 # Build the model
 gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = train_data)
 # Make predictions
@@ -410,11 +423,6 @@ gam_pred <- gam_model %>% predict(cleaned_test_data)
 
 e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
 
-```{r}
-# summary
-summary(glm_model)$r.squared
-summary(gam_model)$r.sq
-```
 
 ```{r, echo=FALSE, predictionHistograms, out.width='0.98\\columnwidth'}
 par(mfcol = c(1, 2), cex = 0.7)
