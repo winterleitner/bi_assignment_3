@@ -491,9 +491,6 @@ To further evaluate the model it is now trained utilising all exept the validati
 gam_model_eval <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = rbind(train_data,cleaned_test_data))
 gam_pred_eval_2 <- gam_model_eval %>% predict(cleaned_validate_data)
 mean(abs((cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price))
-relative_error <- abs(cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price
-nrow(relative_error)
-sort(relative_error)[floor(nrow(relative_error)*0.95)]
 ```
 The mean error does not change significally, which points to good stability of the model. Bringing confidence in its usability with new data collected in future years.
 
@@ -506,7 +503,15 @@ Reflecting on the initially stated success criteria:
 
 * The estimate needs to be within a range of the actual price +/- 15% for 95% of the estimations made.
 
+```{r}
+# relative_error <- cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price
+relative_error_abs <- abs(cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price
+error_of_95 <- sort(relative_error_abs)[sort(relative_error_abs)<floor(nrow(relative_error_abs)*0.95)]
+ratio_lower_15 <- nrow(relative_error_abs[relative_error_abs < 0.15])/nrow(relative_error_abs)
 
+```
+
+Looking back the initial set goal, it was not possible to achieve the set goal. For 95% of the data a max error **`r ratio_lower_15`** can be ensured, while the absolut mean error for 95% is `r mean(relative_error_abs)`, however this can be positively or negatively which means it can either benefit the customer or the business. The non absolut error is 
 # Deployment
 
 ## a. Deployment Recommendations
