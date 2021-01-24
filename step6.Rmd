@@ -505,13 +505,11 @@ gam_pred_eval_2 <- gam_model_eval %>% predict(cleaned_validate_data)
 ```
 The mean error (`r mean(abs((cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price))`) does not change significantly, which points to good stability of the model. Bringing confidence in its usability with new data collected in future years.
 
-## c. Identify and document expected performance from other sources
+## c. + d. Identify and document expected performance from other sources
 
 In a case study found on towardsdatascience.com, a similar prediction is made using some other algorithms. The used dataset has more attributes as well as more rows compared to ours. There, they only evaluate the performance in terms of absolute errors. In their case, the best performing algorithm was Random Forest with a mean absolute error of 2047 dollars. [@Gokce] Our model produced a mean absolute error of `r mean(abs(cleaned_validate_data$price - gam_pred_eval_2))` (GAM) GBP, which is comparable.
 
-d. Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e – Data Mining success Criteria) according to different metrics (i.e. overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, ... (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason...)
-
-e. Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
+## e. Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
 Reflecting on the initially stated success criteria:
 
 * The estimate needs to be within a range of the actual price +/- 15% for 95% of the estimations made.
