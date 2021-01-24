@@ -331,6 +331,7 @@ Choosing a linear regression model leaves open the possibility to modify the for
 ## Data Split in train / validation / test set
 
 Dividin the data train, validation and test set. In the ratio:
+
 * train: 70%
 * validate: 15%
 * test: 15%
@@ -339,7 +340,10 @@ To ensure reroducability a seed is set.
 
 ```{r}
 set.seed(1)
-assignment <- sample(1:3,nrow(car_data),prob = c(0.7,0.15,0.15), replace = TRUE)
+assignment <- sample(1:3,
+                     nrow(car_data),
+                     prob = c(0.7,0.15,0.15),
+                     replace = TRUE)
 
 train_data <- car_data[assignment == 1,]
 test_data <- car_data[assignment == 2,]
@@ -368,6 +372,7 @@ d. Train the model on the training set and comparing the performance on the vali
 
 As starting point for the regression model the linear regression model was taken without the addition of more elaborated parametetrisation. This already delivered a decent predicition accuracy.
 Regarding the previously mentioned issue with the scarse car models, we tested the predicitionbehaviour with and without making use of the car model as an attribute. To explore what it has on the prediciton.
+To measure the quality of a model the R-squared value is utilised. R-squared is describes the proportion of variation of the dependent value, that can be explained utilising the regression model. It gives a first performance value of the model before having to validate it utilising predictions. Furter performance comparisons are done using predictions with the validation set.
 ```{r}
 # without car model
 formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
@@ -385,32 +390,17 @@ rsquares <- c(summary(glm_model_noModels)$r.squared, summary(glm_model)$r.square
 ```
 
 ```{r, echo=FALSE}
-data.frame(model = c("with car model", "without car model"), R_square = rsquares) %>%
+data.frame(model = c("without car model","with car model"), R_square = rsquares) %>%
   knitr::kable(format = "latex", booktabs = TRUE, caption = "Attribute selection impact")
 ```
 
 As expected based on the correlation matrix, the car models do have impact on the prediction accuracy. This is further proven by the higher R-squared value. Therefore it will be used for further modelling.
 While use of the linear regression model delivers good results, the linearity of the problem is only a hypothesis and in case of non-linearity an alternative model could deliver better results.
-We opted to utilise
+The use of the gam model allows for the computation of smoothening factors in the formula which can result in an improved prediction.
 
 ```{r, echo=FALSE, include=FALSE}
 
 formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
-
-# encountered issue -> depending on the training and testing set it can be that one model is newly introduced in the testset which is not presen in the training set.
-# This could also happen in the daily use of the system when new carmodels are introduces. How can this be handeld?
-# Looking at the correlation matrix, the model of a car does not have high correlation with the price
-
-
-
-# glm
-glm_model <- lm(formula2,data = train_data)
-glm_pred <- predict(glm_model,cleaned_test_data)
-
-# decision tree
-# library(rpart)
-# tree_model <- rpart(formula2,method = "anova", data = car_data[trainsample,])
-# tree_pred <- predict(tree_model, cleaned_testing_data)
 
 # Build the model
 gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = train_data)
@@ -418,10 +408,7 @@ gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+ta
 gam_pred <- gam_model %>% predict(cleaned_test_data)
 ```
 
-
 e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
-
-
 
 ```{r}
 # summary
@@ -464,6 +451,14 @@ ggplot(results,aes(x=true,y=glm)) + geom_point(alpha = 0.2) + xlab("actual price
 ```{r, gamscatter, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Scatter plot of GAM predictions vs true prices"}
 ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2) + xlab("actual price") + ylab("predicted price")
 ```
+
+## Tuning process summary:
+```{r, echo=FALSE}
+rsquares <- c(summary(glm_model_noModels)$r.squared, summary(glm_model)$r.squared,summary(gam_model)$r.sq)
+data.frame(model = c("GLM (without car model)", "GLM ", "GAM"), R_square = rsquares) %>%
+  knitr::kable(format = "latex", booktabs = TRUE, caption = "Attribute selection impact")
+```
+
 
 # Evaluation
 Insert content here.
