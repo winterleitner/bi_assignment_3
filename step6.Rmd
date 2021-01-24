@@ -433,19 +433,20 @@ boxplot(cleaned_test_data$price - gam_pred)
 summary(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
 ```
 
-## Tuning process summary:
+## Tuning process
+
+Over the last step the regression model was optimised and tested by modifying the training attributes, the model itself and the parameters. Summary of the continuous optimisations are summarised in the table below:
 ```{r, echo=FALSE}
 rsquares <- c(summary(glm_model_noModels)$r.squared, summary(glm_model)$r.squared,summary(gam_model)$r.sq)
-data.frame(model = c("GLM (without car model)", "GLM ", "GAM"), R_square = rsquares) %>%
+data.frame(model = c("GLM (w/o car model)", "GLM ", "GAM"), R_square = rsquares ) %>%
   knitr::kable(format = "latex", booktabs = TRUE, caption = "Attribute selection impact")
 ```
 
 
 # Evaluation
-Insert content here.
 
-a. Apply the final model on the test data and document performance.
-
+As final evaluation of the model the validation set is used.
+Since the validation set was not utilised until now, neither the model or its parameters are optimised for it. It can be seen as a simulation of new data being applied to it.
 ```{r}
 # Evaluate models
 gam_pred_val <- gam_model %>% predict(cleaned_validate_data)
@@ -457,11 +458,26 @@ summary(abs((cleaned_validate_data$price - gam_pred_val)/cleaned_validate_data$p
 ```
 
 b. Re-train the model with identical hyper-parameters using the full train and validation data and again apply it on the test data, documenting the performance
+## Retraining with train and test data
+To further evaluate the model it is now trained utilising all exept the validation data set.
+```{r}
+gam_model_eval <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = rbind(train_data,cleaned_test_data))
+gam_pred_eval_2 <- gam_model_eval %>% predict(cleaned_validate_data)
+mean(abs((cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price))
+relative_error <- abs(cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price
+nrow(relative_error)
+sort(relative_error)[floor(nrow(relative_error)*0.95)]
+```
+The mean error does not change significally, which points to good stability of the model. Bringing confidence in its usability with new data collected in future years.
+
 c. Identify and document
     i. state-of-the-art performance from the literature using the same (albeit potentially slightly differently pre-processed) data set from the literature.
     ii. the expected base-line performance of a trivial acceptor / rejecter or random classifier
 d. Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e – Data Mining success Criteria) according to different metrics (i.e. overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, ... (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason...)
 e. Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
+Reflecting on the initially stated success criteria:
+
+* The estimate needs to be within a range of the actual price +/- 15% for 95% of the estimations made.
 
 
 # Deployment
