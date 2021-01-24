@@ -353,7 +353,7 @@ validate_data <- car_data[assignment == 3,]
 ```
 
 Splitting the data in train, test and validation samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
-Further thought process on this matter in regards of usability in business are present in **ADD REFERENCE HERE!**
+Further thought process on this matter in regards of usability in business are present in the deployment section.
 
 ```{r out.width='0.98\\columnwidth'}
 # Analysing data on the carmodels
