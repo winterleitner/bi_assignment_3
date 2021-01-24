@@ -1,5 +1,5 @@
 ---
-output: 
+output:
   bookdown::pdf_book:
     template: sample-sigchi.tex
     keep_tex: true
@@ -48,6 +48,9 @@ car_data <- rbind(audi, bmw, ford, hyundi, merc, skoda, toyota, vauxhall, vw)
 car_data <- car_data %>%
   select('brand', everything())
 car_data <- car_data %>% relocate('price', .after = last_col())
+
+#replace year with age
+car_data$age = 2020 - car_data$year
 ```
 
 # Introduction
@@ -108,31 +111,18 @@ The following criteria need to be met by the prediction:
 
 ## d. Data Mining Goals
 
-In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above. 
+In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above.
 
 ## e. Data Mining Success Criteria
 
 Regarding the result of the estimation, one important success criterion is:
 
-* The estimate needs to be within a range of the actual price +/- 10% for 95% of the estimations made.
+* The estimate needs to be within a range of the actual price +/- 15% for 95% of the estimations made.
 
 This is important because estimates that are further off the actual price may lead to:
 
 * People aborting the process when the estimate is much lower than their expectation
 * People entering the negotiations with far inflated expectation, effectively reducing the changes of the platform owners to score a good deal
-
-
-Citation example.[@Aditya]
-Plot example.**The maturation of the song over time is shown in Figure \@ref(fig:tribute-plot).**
-
-```{r tribute-plot, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="This is how great Tribute gets over time"}
-hist(car_data$year, xlim=c(1970, 2020))
-```
-
-Small plot example.
-```{r two-col-tribute-plot, echo=FALSE, out.width='0.98\\textwidth', fig.cap="This is a two-column plot of how great Tribute gets over time", fig.env='figure*'}
-plot(pressure)
-```
 
 
 # Data Understanding
@@ -142,8 +132,8 @@ In the following section, a data description report containing data types, stati
 The attributes in the data set have the data types shown in **Table \@ref(tab:table-datatypes).**
 
 ```{r echo=FALSE}
-Attribute <- c("model", "year", "transmission", "mileage", "fuelType", "tax", "mpg", "engineSize", "price");
-Type <- c("String, nominal", "Integer, interval", "String, nominal", "Integer, ratio", "String, nominal", "Integer, ratio", "Float, ratio", "Float, ratio", "Integer, ratio")
+Attribute <- c("model", "age", "year", "transmission", "mileage", "fuelType", "tax", "mpg", "engineSize", "price");
+Type <- c("String, nominal", "Integer, interval", "Integer, ratio", "String, nominal", "Integer, ratio", "String, nominal", "Integer, ratio", "Float, ratio", "Float, ratio", "Integer, ratio")
 data_types <- data.frame(Attribute, Type)
 ```
 
@@ -155,31 +145,61 @@ data_types %>%
 
 ## b. Statistical Properties
 
-```{r echo=FALSE}
-
-which.max(car_data$year)
-car_data[39176,]
-```
-
-Data Description Report presenting
-a. Data types,
-b. Statistical properties
-c. Data Quality aspects
-d. Visual Exploration of data properties and hypotheses
-
-## c. Data Quality aspects
-Since the data is recorded from the internet there is the possibility of it cointaining invalid information or missing values.
-
-
-Data containing NA
 ```{r}
-dim(car_data) == dim(car_data[complete.cases(car_data),])
-# no na
-```
-```{r}
+options(width = 60)
 summary(car_data)
 ```
 
+
+## c. Data Quality aspects
+Since the data is recorded from the internet there is the possibility of it containing invalid information or missing values.
+
+To begin with, we check the data for missing values. However, in this speficic case, there are none.
+```{r}
+dim(car_data) ==
+  dim(car_data[complete.cases(car_data),])
+```
+
+Next up, we check plausibility of some of the extreme cases of numerical values. To keep it short, we only included one exemplary output her and then summarize the findings.
+```{r}
+options(width = 60)
+head(car_data[order(car_data$age),], 5)
+# year 2060 is an error
+
+head(car_data[order(-car_data$age),], 5)
+# the oldest cars seem realistic
+```
+```{r echo=FALSE, include=FALSE}
+#MILEAGE
+head(car_data[order(car_data$mileage),], 10)
+# year 2008 and only one mile does not seem realistic, especially given the price.
+
+head(car_data[order(-car_data$mileage),], 10)
+# other end looks good
+
+# TAX
+head(car_data[order(car_data$tax),], 10)
+# tax seems realistic on the low end ("slow" cars = low tax)
+
+head(car_data[order(-car_data$tax),], 10)
+# tax seems realistic on the top end (fast cars = high tax)
+
+# MPG
+head(car_data[order(car_data$mpg),], 10)
+head(car_data[order(-car_data$mpg),], 10)
+# for MPG, both high and low and values do not seem realistic. There is definitely some need for cleaning here.
+
+# ENGINE SIZE
+head(car_data[order(car_data$engineSize),], 10)
+head(car_data[order(-car_data$engineSize),], 10)
+# on the upper end, everything looks good, but there are entries with engine size = 0 for petrol and diesel cars, which is not possible
+
+# Price
+head(car_data[order(car_data$price),], 10)
+head(car_data[order(-car_data$price),], 10)
+# pricing for the extreme values looks pretty good, however in the top 10, we were wondering if the high prices for e.g. the Mercedes A-Class (>130.000) are authentic.
+```
+Most of the extreme values in the dataset were realistic. Some entries contain questionable combinations of age and mileage, unrealistically high or low MPG values or "0" engine sizes. In those cases, some filtering should be done.
 
 ## d. Visual Exploration of data properties and hypotheses
 
@@ -194,29 +214,22 @@ boxplot(car_data$mpg, main="MPG")
 boxplot(car_data$tax, main="Tax")
 par(mfcol = c(1, 1))
 ```
-There are a few things we can learn from these initial diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at **Figure \@ref(fig:car-age)**, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old.
+There are a few things we can learn from these diagrams. For example, it is interesting to see car listings contained in the data set are mostly for rather new cars, with a mileage median of less than 25000 miles. Taking a look at **Figure \@ref(fig:car-age)**, this suspicion is confirmed. The vast majority of cars in the dataset is indeed less than five years old. There is `r length(car_data$age[car_data$age < 0])` entry where the cars year is seemingly bigger than 2020, that is 2060, which will have to be dealt with in later steps.
 
 ```{r car-age, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Histogram of car age."}
-hist(2020-car_data$year[car_data$year <= 2020], xlim= c(0,30), main="Histogram of car age")
+hist(car_data$age[car_data$age >= 0], xlim= c(0,30), main="Histogram of car age", xlab="Age (cleaned age < 0 entries)")
 ```
 
-```{r, pairs-numeric, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
+The correlation plot in **Figure \@ref(fig:correlationmatrix)** shows some pretty good correlation between ther predictor variables and the price, so we might be able to create a solid regression using the data available.
+
+```{r, correlationmatrix, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
 ggcorrplot(cor(data.matrix(car_data)))
 ```
-
-
-Table example.
-
-```{r table-iris, echo=FALSE}
-iris %>%
-  select(-Species) %>%
-  head(10) %>%
-  knitr::kable(format = "latex", booktabs = TRUE, caption = "Example Table Showcasing capabilities")
-```
-
-
+From the view point of a human estimating the value of a used car, the most influential attributes should be age, mileage and brand/model as well as general condition, which is however not part of our dataset. Looking at the correlation matrix, we see that there is indeed a significant correlation between price and age as well as mileage. For model and brand, the correlation is much lower.
 
 # Data Preparation report
+
+
 Insert content here.
 
 a. Analyze options and potential for derived attributes (note: if the potential is considered low, these obviously do not necessarily have to be applied for your analysis, but options should be documented)
@@ -229,8 +242,8 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 # Modeling
 Insert content here.
-```{r}
-trainsample <- sample(seq_len(nrow(car_data)),size = floor(0.80 * nrow(car_data)))
+```{r, echo=FALSE, include=FALSE}
+trainsample <- sample(seq_len(nrow(car_data)),size = floor(0.75 * nrow(car_data)))
 
 formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
 formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
@@ -251,24 +264,25 @@ testing_data <- car_data[-trainsample,]
 cleaned_testing_data <- testing_data[!testing_data$model %in% missing_fact,]
 
 # glm
-glm_model <- glm(formula2,data = car_data[trainsample,])
+glm_model <- lm(formula2,data = car_data[trainsample,])
 glm_pred <- predict(glm_model,cleaned_testing_data)
 
 # decision tree
 
-# library(rpart) 
-# tree_model <- rpart(formula2,method = "anova", data = car_data[trainsample,]) 
+# library(rpart)
+# tree_model <- rpart(formula2,method = "anova", data = car_data[trainsample,])
 # tree_pred <- predict(tree_model, cleaned_testing_data)
 
 library(mgcv)
 # Build the model
 gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+tax+s(engineSize)+model, data = car_data[trainsample,])
 # Make predictions
-gam_pred <- model %>% predict(cleaned_testing_data)
+gam_pred <- gam_model %>% predict(cleaned_testing_data)
 
-summary(gma_model)
 # summary
-summary(lm_model)$r.squared
+summary(glm_model)$r.squared
+summary(gam_model)$r.sq
+
 ```
 
 
@@ -301,6 +315,8 @@ While complex regression models might deliver higher accuracies, they easily bec
 Generalized linear regression is the got to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
 
 b. Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
+
+Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of ...
 
 c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
 d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
