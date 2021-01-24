@@ -363,9 +363,11 @@ tail(sort(table(car_data$model),decreasing = TRUE),5)
 
 # Carmodels missing in the trainingdata
 missing_fact_test <- setdiff(
-  unique(test_data$model), unique(train_data$model))
+  unique(test_data$model),
+  unique(train_data$model))
 missing_fact_validate <- setdiff(
-  unique(validate_data$model), unique(train_data$model))
+  unique(validate_data$model),
+  unique(train_data$model))
 
 cleaned_test_data <- test_data[!test_data$model
     %in% missing_fact_test,]
@@ -515,11 +517,18 @@ Reflecting on the initially stated success criteria:
 * The estimate needs to be within a range of the actual price +/- 15% for 95% of the estimations made.
 
 ```{r}
-relative_error <- (cleaned_validate_data$price - gam_pred_eval_2)/cleaned_validate_data$price
+relative_error <- (cleaned_validate_data$price -
+  gam_pred_eval_2)/cleaned_validate_data$price
 relative_error_abs <- abs(relative_error)
-error_of_95_abs <- sort(relative_error_abs)[floor(nrow(relative_error_abs)*0.95)]
-mean_error_of_95_abs <- mean(sort(relative_error_abs)[sort(relative_error_abs)<error_of_95_abs])
-ratio_lower_15 <- nrow(relative_error_abs[relative_error_abs < 0.15])/nrow(relative_error_abs)
+
+error_of_95_abs <- sort(relative_error_abs)[
+  floor(nrow(relative_error_abs)*0.95)]
+
+mean_error_of_95_abs <- mean(sort(relative_error_abs)[
+  sort(relative_error_abs)<error_of_95_abs])
+ratio_lower_15 <-
+  nrow(relative_error_abs[relative_error_abs <
+    0.15])/nrow(relative_error_abs)
 ```
 
 Looking back the initial set goal, it was not possible to achieve the set goal. For 95% of the data a max error **`r ratio_lower_15`** can be ensured, while the absolut mean error for 95% is **`r round(mean_error_of_95_abs,3)`**, however this can be positively or negatively which means it can either benefit the customer or the business.
