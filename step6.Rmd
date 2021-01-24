@@ -317,36 +317,33 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 # Modeling
 
-a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
+## Identify suitable data mining algorithms
 
-The goal is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning with regression, prediction of a numerical value.
-
+The goal, as stated by the data mining goal, is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning process for regression, the prediction of a continuous numerical value.
 When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
 While complex regression models might deliver higher accuracies, they easily become difficult to interpret and follow back decisions.
-Generalized linear regression is the got to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
+Generalized linear regression is the go to to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
+As linear relationship of the attributes and the prediction value cannot be assumed, an alternative regression model is implemented and compared: the Generalized additive models (gam). It is based on the idea to combine generalized linear models and additive models.
 
-b. Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
-
+## Hyper-parameters
 Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
 
-
-c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
-
+## Data Split in train / validation / test set
 
 Dividin the data train, validation and test set. In the ratio:
 * train: 70%
 * validate: 15%
 * test: 15%
 
-To ensure rproducability a seed is set.
+To ensure reroducability a seed is set.
 
 ```{r}
 set.seed(1)
 assignment <- sample(1:3,nrow(car_data),prob = c(0.7,0.15,0.15), replace = TRUE)
 
-train_data <- car_data[assignment==1,]
-test_data <- car_data[assignment==2,]
-validate_data <- car_data[assignment==3,]
+train_data <- car_data[assignment == 1,]
+test_data <- car_data[assignment == 2,]
+validate_data <- car_data[assignment == 3,]
 ```
 
 Splitting the data in train, test and validation samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
@@ -366,11 +363,38 @@ cleaned_test_data <- test_data[!test_data$model %in% missing_fact_test,]
 cleaned_validate_data <- validate_data[!validate_data$model %in% missing_fact_validate,]
 ```
 
+## Model Traning and Parameter Setting
 d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
+
+As starting point for the regression model the linear regression model was taken without the addition of more elaborated parametetrisation. This already delivered a decent predicition accuracy.
+Regarding the previously mentioned issue with the scarse car models, we tested the predicitionbehaviour with and without making use of the car model as an attribute. To explore what it has on the prediciton.
+```{r}
+# without car model
+formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
+# with car model
+formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
+
+glm_model_noModels <- lm(formula,data = train_data)
+glm_pred_noModels <- predict(glm_model_noModels,cleaned_test_data)
+summary(glm_model_noModels)$r.squared
+
+glm_model <- lm(formula2,data = train_data)
+glm_pred <- predict(glm_model,cleaned_test_data)
+
+rsquares <- c(summary(glm_model_noModels)$r.squared, summary(glm_model)$r.squared)
+```
+
+```{r, echo=FALSE}
+data.frame(model = c("with car model", "without car model"), R_square = rsquares) %>%
+  knitr::kable(format = "latex", booktabs = TRUE, caption = "Attribute selection impact")
+```
+
+As expected based on the correlation matrix, the car models do have impact on the prediction accuracy. This is further proven by the higher R-squared value. Therefore it will be used for further modelling.
+While use of the linear regression model delivers good results, the linearity of the problem is only a hypothesis and in case of non-linearity an alternative model could deliver better results.
+We opted to utilise
 
 ```{r, echo=FALSE, include=FALSE}
 
-formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
 formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
 
 # encountered issue -> depending on the training and testing set it can be that one model is newly introduced in the testset which is not presen in the training set.
@@ -405,10 +429,10 @@ summary(glm_model)$r.squared
 summary(gam_model)$r.sq
 ```
 
-```{r}
+```{r, out.width='0.98\\columnwidth'}
 results <- data.frame(true = cleaned_test_data$price, gam = gam_pred, glm = glm_pred)
-ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2)
-ggplot(results,aes(x=true,y=glm)) + geom_point(alpha = 0.2)
+ggplot(results,aes(x=true,y=glm)) + geom_point(alpha = 0.2) + xlab("actual price") + ylab("predicted price")
+ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2) + xlab("actual price") + ylab("predicted price")
 
 hist(cleaned_test_data$price-glm_pred,breaks = 200)
 hist(cleaned_test_data$price-gam_pred,breaks = 200)
