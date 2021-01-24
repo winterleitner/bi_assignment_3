@@ -94,7 +94,7 @@ For this project, we used a dataset found on Kaggle.com provided by user Aditya 
   VW
 \end{itemize}
 
-Additionally, the data set contains files with premade subsets of above mentioned car brands, for example \emph{coclass.csv}, which contains only listings for the Mercedes model C Class. We chose to only utilize the unfiltered datasets.
+Additionally, the data set contains files with premade subsets of above mentioned car brands, for example \emph{cclass.csv}, which contains only listings for the Mercedes model C Class. We chose to only utilize the unfiltered datasets.
 
 Apart from the car brand, there are a number of other attributes available for each data entry.
 
@@ -126,12 +126,12 @@ as well as the target variable price.
 \hypertarget{a.-scenario}{%
 \subsection{a. Scenario}\label{a.-scenario}}
 
-A group of entrepreneurs in the used car business want to counteract the ongoing trend of people selling their cars to other private individuals directly without involving commercial reseller, which has become very easy given the availability of online market places for used goods. The idea is the following: Customers are offered a new web-based platform where they can enter the most important key fact about the car they would like to sell. The platform the immediately returns a first estimate of the price the platform owners would pay for the car. This estimate should be based on a model created from the used car listing data available.
+A group of entrepreneurs in the used car business want to counteract the ongoing trend of people selling their cars to other private individuals directly without involving commercial reseller, which has become very easy given the availability of online market places for used goods. The idea is the following: Customers are offered a new web-based platform where they can enter the most important key facts about the car they would like to sell. The platform immediately returns a first estimate of the price the platform owners would pay for the car. This estimate should be based on a model created from the used car listing data available.
 
 \hypertarget{b.-business-objectives}{%
 \subsection{b. Business Objectives}\label{b.-business-objectives}}
 
-The business objectives is iin short:
+The business objectives is in short:
 
 \textbf{What is the expected value of a used car based on the given data entries?}
 
@@ -140,7 +140,7 @@ Answering this question helps the platform in multiple ways.
 \begin{itemize}
 \tightlist
 \item
-  make it more convenient for customers to sell their used car but getting an accurate first estimate right after entering the data
+  make it more convenient for customers to sell their used car by getting an accurate first estimate right after entering the data
 \item
   increase revenues by missing out on fewer chances to buy used cars (more cars resold via the platform instead of directly to other buyers)
 \item
@@ -150,7 +150,7 @@ Answering this question helps the platform in multiple ways.
 \end{itemize}
 
 \hypertarget{c.-business-success-criteria}{%
-\subsection{c.~Business Success Criteria}\label{c.-business-success-criteria}}
+\subsection{c. Business Success Criteria}\label{c.-business-success-criteria}}
 
 The following criteria need to be met by the prediction:
 
@@ -162,7 +162,7 @@ The following criteria need to be met by the prediction:
 \end{itemize}
 
 \hypertarget{d.-data-mining-goals}{%
-\subsection{d.~Data Mining Goals}\label{d.-data-mining-goals}}
+\subsection{d. Data Mining Goals}\label{d.-data-mining-goals}}
 
 In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above.
 
@@ -249,11 +249,11 @@ price & Integer, ratio\\
 Data Description Report presenting
 a. Data types,
 b. Statistical properties
-c.~Data Quality aspects
-d.~Visual Exploration of data properties and hypotheses
+c. Data Quality aspects
+d. Visual Exploration of data properties and hypotheses
 
 \hypertarget{d.-visual-exploration}{%
-\subsection{d.~Visual Exploration}\label{d.-visual-exploration}}
+\subsection{d. Visual Exploration}\label{d.-visual-exploration}}
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
@@ -266,6 +266,7 @@ There are a few things we can learn from these initial diagrams. For example, it
 \begin{figure}
 \includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/car-age-1} \caption{Histogram of car age.}\label{fig:car-age}
 \end{figure}
+
 \begin{figure}
 \includegraphics[width=0.98\columnwidth]{step6_files/figure-latex/pairs-numeric-1} \caption{Pairs of all numeric attributes}\label{fig:pairs-numeric}
 \end{figure}
@@ -309,15 +310,15 @@ Insert content here.
   Analyze options for additional external data sources, attributes that might be useful to better address the business objectives or data mining goals (Note: this description may be hypothetical, i.e.~you are not necessarily required to actually obtain and integrate the external data for the analysis)
 \end{enumerate}
 
-\hypertarget{e.g.-car-horse-power}{%
-\paragraph{e.g.~Car Horse Power}\label{e.g.-car-horse-power}}
+\hypertarget{e.g.car-horse-power}{%
+\paragraph{e.g.~Car Horse Power}\label{e.g.car-horse-power}}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
+  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots{}) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
 \end{enumerate}
 
 \hypertarget{modeling}{%
@@ -365,7 +366,7 @@ Insert content here.
     the expected base-line performance of a trivial acceptor / rejecter or random classifier
   \end{enumerate}
 \item
-  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots)
+  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots{})
 \item
   Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
 \end{enumerate}
@@ -379,7 +380,7 @@ Insert content here.
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots) as well as recommendations for subsequent analysis.
+  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots{}) as well as recommendations for subsequent analysis.
 \item
   Consider and briefly document potential ethical aspects as well as impact assessment / risks identified in deployment
 \item

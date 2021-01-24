@@ -63,7 +63,7 @@ For this project, we used a dataset found on Kaggle.com provided by user Aditya 
 * Vauxhall (= Opel in Great Britain)
 * VW
 
-Additionally, the data set contains files with premade subsets of above mentioned car brands, for example *coclass.csv*, which contains only listings for the Mercedes model C Class. We chose to only utilize the unfiltered datasets.
+Additionally, the data set contains files with premade subsets of above mentioned car brands, for example *cclass.csv*, which contains only listings for the Mercedes model C Class. We chose to only utilize the unfiltered datasets.
 
 Apart from the car brand, there are a number of other attributes available for each data entry.
 
@@ -82,18 +82,17 @@ as well as the target variable price.
 
 ## a. Scenario
 
-A group of entrepreneurs in the used car business want to counteract the ongoing trend of people selling their cars to other private individuals directly without involving commercial reseller, which has become very easy given the availability of online market places for used goods. The idea is the following: Customers are offered a new web-based platform where they can enter the most important key fact about the car they would like to sell. The platform the immediately returns a first estimate of the price the platform owners would pay for the car. This estimate should be based on a model created from the used car listing data available.
-
+A group of entrepreneurs in the used car business want to counteract the ongoing trend of people selling their cars to other private individuals directly without involving commercial reseller, which has become very easy given the availability of online market places for used goods. The idea is the following: Customers are offered a new web-based platform where they can enter the most important key facts about the car they would like to sell. The platform immediately returns a first estimate of the price the platform owners would pay for the car. This estimate should be based on a model created from the used car listing data available.
 
 ## b. Business Objectives
 
-The business objectives is iin short:
+The business objectives is in short:
 
 **What is the expected value of a used car based on the given data entries?**
 
 Answering this question helps the platform in multiple ways.
 
-* make it more convenient for customers to sell their used car but getting an accurate first estimate right after entering the data
+* make it more convenient for customers to sell their used car by getting an accurate first estimate right after entering the data
 * increase revenues by missing out on fewer chances to buy used cars (more cars resold via the platform instead of directly to other buyers)
 * speed up final evaluation of car value by offering a good starting point
 * base offers made to customers on true market values
@@ -168,7 +167,21 @@ b. Statistical properties
 c. Data Quality aspects
 d. Visual Exploration of data properties and hypotheses
 
-## d. Visual Exploration
+## c. Data Quality aspects
+Since the data is recorded from the internet there is the possibility of it cointaining invalid information or missing values.
+
+
+Data containing NA
+```{r}
+dim(car_data) == dim(car_data[complete.cases(car_data),])
+# no na
+```
+```{r}
+summary(car_data)
+```
+
+
+## d. Visual Exploration of data properties and hypotheses
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
@@ -186,6 +199,7 @@ There are a few things we can learn from these initial diagrams. For example, it
 ```{r car-age, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Histogram of car age."}
 hist(2020-car_data$year[car_data$year <= 2020], xlim= c(0,30), main="Histogram of car age")
 ```
+
 ```{r, pairs-numeric, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
 ggcorrplot(cor(data.matrix(car_data)))
 ```
@@ -215,8 +229,51 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 # Modeling
 Insert content here.
+```{r}
+trainsample <- sample(seq_len(nrow(car_data)),size = floor(0.75 * nrow(car_data)))
+
+formula <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize
+formula2 <- price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize+model
+
+# encountered issue -> depending on the training and testing set it can be that one model is newly introduced in the testset which is not presen in the training set.
+# This could also happen in the daily use of the system when new carmodels are introduces. How can this be handeld?
+# Looking at tehe correlation matrix, the model of a car does not have high correlation with the price
+
+# Analysing data on the carmodels
+barplot(prop.table(table(car_data$model)))
+head(sort(table(car_data$model),decreasing = TRUE),5)
+tail(sort(table(car_data$model),decreasing = TRUE),5)
+# reveals that some carmodels are only present once in the datamodel
+
+# Carmodels missing in the trainingdata
+missing_fact <- setdiff(unique(car_data[-trainsample,]$model), unique(car_data[trainsample,]$model))
+testing_data <- car_data[-trainsample,]
+testing_data$model
+
+# lm
+lm_model <- lm(formula2,car_data[trainsample,])
+lm_pred <- predict(lm_model, car_data[-trainsample,])
+
+# glm
+glm_model <- glm(price~brand+mpg+mileage+year+transmission+fuelType+tax+engineSize, data = car_data[trainsample,])
+glm_pred <- predict(glm_model, car_data[-trainsample,])
+
+
+# summary
+summary(lm_model)
+
+# result lables
+orig <- c(car_data[-trainsample,])
+
+# Evaluate models
+plot(orig$price,glm_pred)
+plot(orig$price,lm_pred)
+
+```
 
 a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
+The goal is to estimate the price for a car based on it inputed characteristics. 
+
 b. Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
 c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
 d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
