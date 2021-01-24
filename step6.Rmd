@@ -473,17 +473,27 @@ e. Compare the performance obtained with the Data Mining success criteria define
 
 
 # Deployment
-Insert content here.
 
-a. Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, ...) as well as recommendations for subsequent analysis.
-b. Consider and briefly document potential ethical aspects as well as impact assessment / risks identified in deployment
-c. Document aspects to be monitored during deployment, specifying triggers that should lead to intervention.
-d. Briefly re-visit reproducibility aspects reflecting on aspects well documented and those that might pose a risk in terms of reproducibility based solely on the information provided in this report
+## a. Deployment Recommendations
+
+Since we did not quite manage to reach our set data mining success criteria, we would definitely recommend placing a disclaimer next to the application stating that the estimates are without any warranty. But jokes aside, an easy way of improving the predictions is by filtering out obviously wrong predictions like negative prices, which could be done by a module applied after the model. In concrete terms, the web page could return an error message or redirect to a manual evaluation if the model returns a value smaller than zero. 
+
+## b. Ethical and impact assessment
+
+The only problem that could be related to an ethical discussion we could think of was the potential of false overestimation which would leave concerned users very disappointed. Especially for people in a difficult finiancial situation, this behaviour could cause additional stress. This problem concerns also the employees of the car trading company who have to deal with informing the customers about the wrong evaluation of their car. For those employees, this can also become quite frustrating if it happens often.
+
+## c. Aspects to be monitored
+
+Since the model is trained on certain car brands and models only, it is unable to predict the price of those cars not found in the dataset. We therefore recommend logging all requests to the service in order to determine which car models that are not included in the model are frequently queried. That way, the model can incrementally completed in the future, starting with the most relevant car models.
+Another very important aspect is the comparision of model prediction and actual sales price. This helps quickly recognize a deterioration in prediction accuracy and then retrain the model.
+
+## Reproducibility
+
+One decision that we made might be a bit random, and that is the decision to remove all cars with a very low mileage over a certain age. Inversely, decisions like removing outliers based on fuel type AND mpg definitely make sense.
 
 
 # Summary of findings
 
+To sum it all up, we created a decent prediction model that is able to produce rather accurate estimates. However, we would not recommend using it in a production scenario for several reasons. First of all, there is a wide range of attributes that could be valuable for the model to know about that simply were not included in the dataset. An actual users, however, would of course know about the values of these attributes, for example color. This means that the accuracy of the predictions could potentially improve a lot. In order to achieve that, one would however have to collect an entirely new data set, but we think that the effort would be worth it.
 
-
-a. Briefly summarize your overall findings and lessons learned
-b. (optional) Provide feedback on this exercise in general: which parts were useful / less useful; which other kind of experiment would have been interesting, ... (this section is, obviously, optional and will not be considered for grading. You may also decide to provide that kind of feedback anonymously via the feedback mechanism in TISS – in any case we would appreciate learning about it to adjust the exercises for next year following a major re-structuring this year based on feedback obtained.)
+Regarding the exercise itself, we quite liked being confronted with a realistic scenario and trying to come up with a solution for it. However, what we think would have been very useful is some kind of example solution. We are new to data science, so it was quite hard to get a feeling of what was expected. Overall, a good exercise where we learned something.
