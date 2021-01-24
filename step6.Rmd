@@ -276,10 +276,10 @@ For hybrid cars, the quartiles were higher, as expected.
 summary(car_data[car_data$fuelType == "Hybrid", ]$mpg)
 ```
 
-Our strategy to clean the data here therefore was to not remove overall outliers, but outliers per fuel type.
+Our strategy to clean the data here therefore was not to remove overall outliers, but outliers per fuel type.
 
 ```{r, echo=FALSE, include=FALSE}
-old_length <- length(car_data)
+old_length <- nrow(car_data)
 ```
 
 
@@ -292,7 +292,15 @@ for (type in types) {
   }
 }
 ```
-This outlier removal procedure effectively filtered out `r old_length - length(car_data)` entries from the data frame.
+This outlier removal procedure effectively filtered out `r old_length - nrow(car_data)` entries from the data frame.
+
+Next up, data entries where the fuel type indicates a combustion engine but the engine size is 0 are removed.
+```{r}
+car_data <- car_data[!(car_data$engineSize == 0 & car_data$fuelType != "Electric"),]
+```
+
+Regarding the price 
+
 
 
 c. Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g. data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, ...) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
