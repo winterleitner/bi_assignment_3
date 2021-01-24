@@ -300,7 +300,7 @@ Next up, data entries where the fuel type indicates a combustion engine but the 
 car_data <- car_data[!(car_data$engineSize == 0 & car_data$fuelType != "Electric"),]
 ```
 
-Regarding the price 
+Regarding the price outliers that seem unrealistic above, we could not find a satisfying solution. The data comes from online sources, and the prices are whatever the sellers them to. Therefore, in order to remove all of the outliers in terms of over- or undervaluation, an expert would have to look over every single entry to determine whether the price is justified. Therefore, we cannot even determine how many rows are affected and will simply assume that the prices are justified.
 
 
 
