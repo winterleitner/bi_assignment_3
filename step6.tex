@@ -191,7 +191,7 @@ Answering this question helps the platform in multiple ways.
 \end{itemize}
 
 \hypertarget{c.-business-success-criteria}{%
-\subsection{c.~Business Success Criteria}\label{c.-business-success-criteria}}
+\subsection{c. Business Success Criteria}\label{c.-business-success-criteria}}
 
 The following criteria need to be met by the prediction:
 
@@ -203,7 +203,7 @@ The following criteria need to be met by the prediction:
 \end{itemize}
 
 \hypertarget{d.-data-mining-goals}{%
-\subsection{d.~Data Mining Goals}\label{d.-data-mining-goals}}
+\subsection{d. Data Mining Goals}\label{d.-data-mining-goals}}
 
 In order to fulfill the business objective of determining an accurate price estimate, a regression problem needs to be solved. The input data consists of the 9 attributes mentioned above.
 
@@ -303,7 +303,7 @@ price & Integer, ratio\\
 \end{verbatim}
 
 \hypertarget{c.-data-quality-aspects}{%
-\subsection{c.~Data Quality aspects}\label{c.-data-quality-aspects}}
+\subsection{c. Data Quality aspects}\label{c.-data-quality-aspects}}
 
 Since the data is recorded from the internet there is the possibility of it containing invalid information or missing values.
 
@@ -311,7 +311,7 @@ To begin with, we check the data for missing values. However, in this speficic c
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{dim}\NormalTok{(car_data) }\OperatorTok{==}\StringTok{ }
+\KeywordTok{dim}\NormalTok{(car_data) }\OperatorTok{==}
 \StringTok{  }\KeywordTok{dim}\NormalTok{(car_data[}\KeywordTok{complete.cases}\NormalTok{(car_data),])}
 \end{Highlighting}
 \end{Shaded}
@@ -372,7 +372,7 @@ Next up, we check plausibility of some of the extreme cases of numerical values.
 Most of the extreme values in the dataset were realistic. Some entries contain questionable combinations of age and mileage, unrealistically high or low MPG values or ``0'' engine sizes. In those cases, some filtering should be done.
 
 \hypertarget{d.-visual-exploration-of-data-properties-and-hypotheses}{%
-\subsection{d.~Visual Exploration of data properties and hypotheses}\label{d.-visual-exploration-of-data-properties-and-hypotheses}}
+\subsection{d. Visual Exploration of data properties and hypotheses}\label{d.-visual-exploration-of-data-properties-and-hypotheses}}
 
 In the following figures, boxplots illustrate the ranges of the numeric (ratio) variables.
 
@@ -408,15 +408,15 @@ Insert content here.
   Analyze options for additional external data sources, attributes that might be useful to better address the business objectives or data mining goals (Note: this description may be hypothetical, i.e.~you are not necessarily required to actually obtain and integrate the external data for the analysis)
 \end{enumerate}
 
-\hypertarget{e.g.-car-horse-power}{%
-\paragraph{e.g.~Car Horse Power}\label{e.g.-car-horse-power}}
+\hypertarget{e.g.car-horse-power}{%
+\paragraph{e.g.~Car Horse Power}\label{e.g.car-horse-power}}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
+  Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g.~data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, \ldots{}) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
 \end{enumerate}
 
 \hypertarget{modeling}{%
@@ -426,19 +426,66 @@ Insert content here.
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi}.}
+\tightlist
 \item
   Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
-  The goal is to estimate the price for a car based on it inputed characteristics.
+\end{enumerate}
+
+The goal is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning with regression, prediction of a numerical value.
+
+When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
+While complex regression models might deliver higher accuracies, they easily become difficult to interpret and follow back decisions.
+Generalized linear regression is the got to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
+\end{enumerate}
+
+Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
 \item
   Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g.~time series data) and relative sizes of the respective subsets.
+\end{enumerate}
+
+While dividing the data in train and test, some scarse carmodel, meaning of low quantities up to being unique,
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{3}
 \item
   Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used ``default parameters'', focus on reproducibility of the results you report).
-  188.429 Business Intelligence (VU 4,0) -- WS 2020/21 Assignment 2: Data Analytics
 \item
   Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
 \end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# summary}
+\KeywordTok{summary}\NormalTok{(glm_model)}\OperatorTok{$}\NormalTok{r.squared}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8616297
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(gam_model)}\OperatorTok{$}\NormalTok{r.sq}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.8977207
+\end{verbatim}
 
 \hypertarget{evaluation}{%
 \section{Evaluation}\label{evaluation}}
@@ -450,6 +497,95 @@ Insert content here.
 \tightlist
 \item
   Apply the final model on the test data and document performance.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Evaluate models}
+\KeywordTok{plot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price,glm_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price,gam_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{glm_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{hist}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price}\OperatorTok{-}\NormalTok{gam_pred,}\DataTypeTok{breaks =} \DecValTok{200}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1845947
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{glm_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# mean(abs(cleaned_testing_data$price - tree_pred))}
+\CommentTok{# hist(abs(cleaned_testing_data$price - tree_pred),200)}
+
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1548243
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{step6_files/figure-latex/unnamed-chunk-8-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(}\KeywordTok{abs}\NormalTok{((cleaned_testing_data}\OperatorTok{$}\NormalTok{price }\OperatorTok{-}\StringTok{ }\NormalTok{gam_pred)}\OperatorTok{/}\NormalTok{cleaned_testing_data}\OperatorTok{$}\NormalTok{price))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##  0.000001  0.047087  0.102419  0.154824  0.183197 29.757699
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Re-train the model with identical hyper-parameters using the full train and validation data and again apply it on the test data, documenting the performance
 \item
@@ -464,7 +600,7 @@ Insert content here.
     the expected base-line performance of a trivial acceptor / rejecter or random classifier
   \end{enumerate}
 \item
-  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots)
+  Compare the performance achieved with the benchmark and baseline performances (c.f. Section 1e -- Data Mining success Criteria) according to different metrics (i.e.~overall, but also on per-class level (confusion matrix), micro/macro precision/recall in the case of classification tasks, regression errors in certain parts of the data space, \ldots{} (Note your goal is not necessarily to obtain a better result than what has been reported in the state of the art, this is not a grading criterion! On the other hand, if the performance of your classifiers is massively below the stat of the art (or even below a random baseline or trivial acceptor / rejecter) you may want to investigate the reason\ldots{})
 \item
   Compare the performance obtained with the Data Mining success criteria defined in the business understanding phase.
 \end{enumerate}
@@ -478,7 +614,7 @@ Insert content here.
 \def\labelenumi{\alph{enumi}.}
 \tightlist
 \item
-  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots) as well as recommendations for subsequent analysis.
+  Compare the performance obtained with respect to the needs for addressing the business success criteria and provide recommendations for deployment (fully automatic, hybrid solutions, deploying only for a part of the data space, \ldots{}) as well as recommendations for subsequent analysis.
 \item
   Consider and briefly document potential ethical aspects as well as impact assessment / risks identified in deployment
 \item

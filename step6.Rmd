@@ -279,12 +279,41 @@ gam_model <- gam(price~ brand+s(mpg)+s(mileage)+s(year)+transmission+fuelType+ta
 # Make predictions
 gam_pred <- gam_model %>% predict(cleaned_testing_data)
 
-# summary
-summary(glm_model)$r.squared
-summary(gam_model)$r.sq
+
 
 ```
 
+a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
+
+The goal is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning with regression, prediction of a numerical value.
+
+When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
+While complex regression models might deliver higher accuracies, they easily become difficult to interpret and follow back decisions.
+Generalized linear regression is the got to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
+
+b. Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
+
+Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
+
+
+c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
+
+While dividing the data in train and test, some scarse carmodel, meaning of low quantities up to being unique, 
+
+d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
+
+e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
+
+```{r}
+# summary
+summary(glm_model)$r.squared
+summary(gam_model)$r.sq
+```
+
+# Evaluation
+Insert content here.
+
+a. Apply the final model on the test data and document performance.
 
 ```{r}
 # Evaluate models
@@ -300,34 +329,12 @@ boxplot(cleaned_testing_data$price - glm_pred)
 # mean(abs(cleaned_testing_data$price - tree_pred))
 # hist(abs(cleaned_testing_data$price - tree_pred),200)
 
-mean(abs((cleaned_testing_data$price - predictions)/cleaned_testing_data$price))
-boxplot(cleaned_testing_data$price - predictions)
+mean(abs((cleaned_testing_data$price - gam_pred)/cleaned_testing_data$price))
+boxplot(cleaned_testing_data$price - gam_pred)
 
-summary(abs((cleaned_testing_data$price - predictions)/cleaned_testing_data$price))
-
+summary(abs((cleaned_testing_data$price - gam_pred)/cleaned_testing_data$price))
 ```
 
-a. Identify suitable data mining algorithms and select one of these as the most suitable for your experiments, providing a brief justification.
-
-The goal is to estimate the price for a car based on it inputed characteristics.
-When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
-While complex regression models might deliver higher accuracies, they easily become difficult to interpret and follow back decisions.
-Generalized linear regression is the got to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
-
-b. Identify the hyper-parameters available for tuning in your chosen algorithm and select one that you deem most relevant for tuning, providing a brief justification.
-
-Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of ...
-
-c. Define and document a train / validation / test set split, considering where necessary appropriate stratification, any dependencies between data instances (e.g. time series data) and relative sizes of the respective subsets.
-d. Train the model on the training set and comparing the performance on the validation set to identify the best hyper-parameter setting, explicitly documenting all parameter settings (avoid stating simply to have used “default parameters”, focus on reproducibility of the results you report).
-188.429 Business Intelligence (VU 4,0) – WS 2020/21 Assignment 2: Data Analytics
-e. Report suitable performance metrics supported, where possible, by figures/graphs showing the tuning process of the hyper parameter.
-
-
-# Evaluation
-Insert content here.
-
-a. Apply the final model on the test data and document performance.
 b. Re-train the model with identical hyper-parameters using the full train and validation data and again apply it on the test data, documenting the performance
 c. Identify and document
     i. state-of-the-art performance from the literature using the same (albeit potentially slightly differently pre-processed) data set from the literature.
