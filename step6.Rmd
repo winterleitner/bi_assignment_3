@@ -4,7 +4,7 @@ output:
     template: sample-sigchi.tex
     keep_tex: true
     citation_package: natbib
-    fig_caption: true
+    fig_caption: false
 title: Predicting the resale value of used cars
 abstract: This is Assignment 3 in Business Intelligence @ TU Wien in the winter term of 2020.
 bibliography: my-bibliography.bib
@@ -155,7 +155,7 @@ summary(car_data)
 ## c. Data Quality aspects
 Since the data is recorded from the internet there is the possibility of it containing invalid information or missing values.
 
-To begin with, we check the data for missing values. However, in this speficic case, there are none.
+To begin with, we check the data for missing values. However, in this specific case, there are none.
 ```{r}
 dim(car_data) ==
   dim(car_data[complete.cases(car_data),])
@@ -221,7 +221,7 @@ There are a few things we can learn from these diagrams. For example, it is inte
 hist(car_data$age[car_data$age >= 0], xlim= c(0,30), main="Histogram of car age", xlab="Age (cleaned age < 0 entries)")
 ```
 
-The correlation plot in **Figure \@ref(fig:correlationmatrix)** shows some pretty good correlation between ther predictor variables and the price, so we might be able to create a solid regression using the data available.
+The correlation plot in **Figure \@ref(fig:correlationmatrix)** shows some pretty good correlation between the predictor variables and the price, so we might be able to create a solid regression using the data available.
 
 ```{r, correlationmatrix, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Pairs of all numeric attributes"}
 ggcorrplot(cor(data.matrix(car_data)))
@@ -321,24 +321,24 @@ c. Describe other pre-processing steps considered, specifying which ones were ap
 
 ## a. Identify suitable data mining algorithms
 
-The goal, as stated by the data mining goal, is to estimate the price for a car based on it inputed characteristics based on the training data containing nine attributes as well as the prediction lable. Therefore it is a supervised learning process for regression, the prediction of a continuous numerical value.
+The goal, as stated by the data mining goal, is to estimate the price for a car based on its inputted characteristics based on the training data containing nine attributes as well as the prediction label. Therefore it is a supervised learning process for regression, the prediction of a continuous numerical value.
 When choosing the a regression model it has to deliver sufficient results, while being efficient in computation.
 While complex regression models might deliver higher accuracies, they easily become difficult to interpret and follow back decisions.
-Generalized linear regression is the go to to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are managable.
+Generalized linear regression is the go to to regression model as it is fast to train and delivers good estimates and predictions. It's computational requirements depending on the data are manageable.
 As linear relationship of the attributes and the prediction value cannot be assumed, an alternative regression model is implemented and compared: the Generalized additive models (gam). It is based on the idea to combine generalized linear models and additive models.
 
 ## b. Hyper-parameters
-Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very timeintensive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
+Choosing a linear regression model leaves open the possibility to modify the formula to reproduce a linear relationship between the attributes and the predicted value. While doing it manually is very time intesive and inefficient it can be implemented with the use of Generalized additive models (gam). This model allows to apply smoothing functions on the single parameters to improve prediction outcome. Effectively combining generalized linear models with additive models.
 
 ## c. Data Split in train / validation / test set
 
-Dividin the data train, validation and test set. In the ratio:
+Dividing the data train, validation and test set. In the ratio:
 
 * train: 70%
 * validate: 15%
 * test: 15%
 
-To ensure reroducability a seed is set.
+To ensure reproducability a seed is set.
 
 ```{r}
 set.seed(1)
@@ -352,16 +352,17 @@ test_data <- car_data[assignment == 2,]
 validate_data <- car_data[assignment == 3,]
 ```
 
-Splitting the data in train, test and validation samples, caused failuers in the prediciton process, as some car models are very scarse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
+Splitting the data in train, test and validation samples, caused failures in the prediction process, as some car models are very sparse or unique. Meaning the case happened of certain models appearing only in the testing or validation samples and therefore being unknown levels to the model. To resolve this issue, new levels (car models not present in the training sample) were removed from the testing and validation sample.
 Further thought process on this matter in regards of usability in business are present in the deployment section.
 
 ```{r out.width='0.98\\columnwidth'}
-# Analysing data on the carmodels
+# Analyzing data on the car models
 head(sort(table(car_data$model),decreasing = TRUE),5)
 tail(sort(table(car_data$model),decreasing = TRUE),5)
-# reveals that some carmodels are only present once in the datamodel
+# reveals that some car models are only present
+# once in the data model
 
-# Carmodels missing in the trainingdata
+# Car models missing in the training data
 missing_fact_test <- setdiff(
   unique(test_data$model),
   unique(train_data$model))
@@ -371,15 +372,16 @@ missing_fact_validate <- setdiff(
 
 cleaned_test_data <- test_data[!test_data$model
     %in% missing_fact_test,]
-cleaned_validate_data <- validate_data[!validate_data$model
+cleaned_validate_data <- validate_data[
+  !validate_data$model
     %in% missing_fact_validate,]
 ```
 
 ## d. Model Traning and Parameter Setting
 
-As starting point for the regression model the linear regression model was taken without the addition of more elaborated parametetrisation. This already delivered a decent predicition accuracy.
-Regarding the previously mentioned issue with the scarse car models, we tested the predicitionbehaviour with and without making use of the car model as an attribute. To explore what it has on the prediciton.
-To measure the quality of a model the R-squared value is utilised. R-squared is describes the proportion of variation of the dependent value, that can be explained utilising the regression model. It gives a first performance value of the model before having to validate it utilising predictions. Furter performance comparisons are done using predictions with the validation set.
+As starting point for the regression model the linear regression model was taken without the addition of more elaborated parameterisation. This already delivered a decent prediction accuracy.
+Regarding the previously mentioned issue with the sparse car models, we tested the prediction behavior with and without making use of the car model as an attribute. To explore what it has on the prediction.
+To measure the quality of a model the R-squared value is utilized. R-squared is describes the proportion of variation of the dependent value, that can be explained utilizing the regression model. It gives a first performance value of the model before having to validate it utilizing predictions. Further performance comparisons are done using predictions with the validation set.
 
 ```{r, echo=TRUE, results='hide'}
 # Example of prediction with car model
@@ -412,9 +414,9 @@ data.frame(model = c("without car model","with car model"), R_square = rsquares)
   knitr::kable(format = "latex", booktabs = TRUE, caption = "Attribute selection impact")
 ```
 
-As expected based on the correlation matrix, the car models do have impact on the prediction accuracy. This is further proven by the higher R-squared value. Therefore it will be used for further modelling.
+As expected based on the correlation matrix, the car models do have impact on the prediction accuracy. This is further proven by the higher R-squared value. Therefore it will be used for further modeling.
 While use of the linear regression model delivers good results, the linearity of the problem is only a hypothesis and in case of non-linearity an alternative model could deliver better results.
-The use of the gam model allows for the computation of smoothening factors in the formula which can result in an improved prediction.
+The use of the gam model allows for the computation of smoothing factors in the formula which can result in an improved prediction.
 
 ```{r, echo=FALSE, include=FALSE}
 # Build the model
@@ -465,7 +467,7 @@ ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2) + xlab("actual price
 
 ## Tuning process
 
-Over the last step the regression model was optimised and tested by modifying the training attributes, the model itself and the parameters. Summary of the continuous optimisations are summarised in the table below:
+Over the last step the regression model was optimized and tested by modifying the training attributes, the model itself and the parameters. Summary of the continuous optimization are summarized in the table below:
 ```{r, echo=FALSE}
 rsquares <- c(summary(glm_model_noModels)$r.squared, summary(glm_model)$r.squared,summary(gam_model)$r.sq)
 data.frame(model = c("GLM (w/o car model)", "GLM ", "GAM"), R_square = rsquares ) %>%
@@ -524,14 +526,14 @@ relative_error_abs <- abs(relative_error)
 error_of_95_abs <- sort(relative_error_abs)[
   floor(nrow(relative_error_abs)*0.95)]
 
-mean_error_of_95_abs <- mean(sort(relative_error_abs)[
-  sort(relative_error_abs)<error_of_95_abs])
+mean_error_of_95_abs <- mean(sort(relative_error_abs)
+  [sort(relative_error_abs)<error_of_95_abs])
 ratio_lower_15 <-
   nrow(relative_error_abs[relative_error_abs <
     0.15])/nrow(relative_error_abs)
 ```
 
-Looking back the initial set goal, it was not possible to achieve the set goal. For 95% of the data a max error **`r ratio_lower_15`** can be ensured, while the absolut mean error for 95% is **`r round(mean_error_of_95_abs,3)`**, however this can be positively or negatively which means it can either benefit the customer or the business.
+Looking back the initial set goal, it was not possible to achieve the set goal. For 95% of the data a max error **`r round(ratio_lower_15, 3)`** can be ensured, while the absolute mean error for 95% is **`r round(mean_error_of_95_abs,3)`**, however this can be positively or negatively which means it can either benefit the customer or the business.
 
 # Deployment
 
@@ -541,12 +543,12 @@ Since we did not quite manage to reach our set data mining success criteria, we 
 
 ## b. Ethical and impact assessment
 
-The only problem that could be related to an ethical discussion we could think of was the potential of false overestimation which would leave concerned users very disappointed. Especially for people in a difficult finiancial situation, this behaviour could cause additional stress. This problem concerns also the employees of the car trading company who have to deal with informing the customers about the wrong evaluation of their car. For those employees, this can also become quite frustrating if it happens often.
+The only problem that could be related to an ethical discussion we could think of was the potential of false overestimation which would leave concerned users very disappointed. Especially for people in a difficult financial situation, this behavior could cause additional stress. This problem concerns also the employees of the car trading company who have to deal with informing the customers about the wrong evaluation of their car. For those employees, this can also become quite frustrating if it happens often.
 
 ## c. Aspects to be monitored
 
 Since the model is trained on certain car brands and models only, it is unable to predict the price of those cars not found in the dataset. We therefore recommend logging all requests to the service in order to determine which car models that are not included in the model are frequently queried. That way, the model can incrementally completed in the future, starting with the most relevant car models.
-Another very important aspect is the comparision of model prediction and actual sales price. This helps quickly recognize a deterioration in prediction accuracy and then retrain the model.
+Another very important aspect is the comparison of model prediction and actual sales price. This helps quickly recognize a deterioration in prediction accuracy and then retrain the model.
 
 ## Reproducibility
 
