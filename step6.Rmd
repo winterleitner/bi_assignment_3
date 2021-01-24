@@ -269,12 +269,14 @@ nrow(car_data[car_data$mpg > 60, ])
 Unfortunately, the car listings in the dataset do not seem to agree with this information. Around one third of the car listings show MPG values higher than 60. Upon further inspection, we came to the conclusion that the MPG values from the listings might correspond to manufacturer ideal values that are practically unobtainable in real world use. For petrol cars, the the mean of the MPG values is about 50, which is way higher than expected.
 
 ```{r}
-summary(car_data[car_data$fuelType == "Petrol", ]$mpg)
+summary(
+  car_data[car_data$fuelType == "Petrol", ]$mpg)
 ```
 
 For hybrid cars, the quartiles were higher, as expected.
 ```{r}
-summary(car_data[car_data$fuelType == "Hybrid", ]$mpg)
+summary(
+  car_data[car_data$fuelType == "Hybrid", ]$mpg)
 ```
 
 Our strategy to clean the data here therefore was not to remove overall outliers, but outliers per fuel type.
@@ -285,11 +287,15 @@ old_length <- nrow(car_data)
 
 
 ```{r}
-types <- distinct(car_data, car_data$fuelType)[, 1]$`car_data$fuelType`
+types <- distinct(
+  car_data, car_data$fuelType)[, 1]$`car_data$fuelType`
 for (type in types) {
-  outliers <- boxplot(car_data[car_data$fuelType == type, ]$mpg, plot=FALSE)$out
+  outliers <- boxplot(
+    car_data[car_data$fuelType == type, ]$mpg, plot=FALSE)$out
+  
   if (length(outliers) > 0) {
-    car_data <- car_data[-which(car_data$mpg %in% outliers & car_data$fuelType == type),]
+    car_data <- car_data[-which(car_data$mpg %in% outliers &
+                                  car_data$fuelType == type),]
   }
 }
 ```
@@ -297,11 +303,13 @@ This outlier removal procedure effectively filtered out `r old_length - nrow(car
 
 Next up, data entries where the fuel type indicates a combustion engine but the engine size is 0 are removed.
 ```{r}
-car_data <- car_data[!(car_data$engineSize == 0 & car_data$fuelType != "Electric"),]
+car_data <- car_data[!(car_data$engineSize == 0 &
+                         car_data$fuelType != "Electric"),]
 ```
 
 Regarding the price outliers that seem unrealistic above, we could not find a satisfying solution. The data comes from online sources, and the prices are whatever the sellers them to. Therefore, in order to remove all of the outliers in terms of over- or undervaluation, an expert would have to look over every single entry to determine whether the price is justified. Therefore, we cannot even determine how many rows are affected and will simply assume that the prices are justified.
 
+We did not remove any attributes. Binning did not seem to make sense, since we wanted to perform a regression where numerical precision is important.
 
 
 c. Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g. data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, ...) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
@@ -398,9 +406,9 @@ summary(gam_model)$r.sq
 ```
 
 ```{r}
-
-plot(cleaned_test_data$price,glm_pred)
-plot(cleaned_test_data$price,gam_pred)
+results <- data.frame(true = cleaned_test_data$price, gam = gam_pred, glm = glm_pred)
+ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2)
+ggplot(results,aes(x=true,y=glm)) + geom_point(alpha = 0.2)
 
 hist(cleaned_test_data$price-glm_pred,breaks = 200)
 hist(cleaned_test_data$price-gam_pred,breaks = 200)
@@ -450,7 +458,7 @@ d. Briefly re-visit reproducibility aspects reflecting on aspects well documente
 
 
 # Summary of findings
-Insert content here.
+
 
 
 a. Briefly summarize your overall findings and lessons learned
