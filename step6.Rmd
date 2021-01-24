@@ -230,13 +230,71 @@ From the view point of a human estimating the value of a used car, the most infl
 
 # Data Preparation report
 
+## a. Potential for derived attributes
 
-Insert content here.
+One adjustment that was already made right after importing the data was deriving the variable **age** from **year**. Our thoughts behind this decision were that as time progresses, a car's value usually decreases. Therefore, if we only use the year, we would have to discard all existing data sooner or later because it would be outdated. The age of the car at the time of the listing is a much more stable attribute in that regard. One assumption that we had to make here is that all the listings were collected in 2020, otherwise our age assignment would be wrong.
+Other than that, we could not think of any variables where it would have made sense to derive new attributes.
 
-a. Analyze options and potential for derived attributes (note: if the potential is considered low, these obviously do not necessarily have to be applied for your analysis, but options should be documented)
-b. Analyze options for additional external data sources, attributes that might be useful to better address the business objectives or data mining goals (Note: this description may be hypothetical, i.e. you are not necessarily required to actually obtain and integrate the external data for the analysis)
+## b. Potential for additional data sources
 
-#### e.g. Car Horse Power
+An attribute that we were especially missing in the dataset was **horse power**. Whilst we have different engine sizes in terms of stroke volume included, in practice we often see engines with the same size produce different amounts of maximal performance. Pricing is of course also higher for stronger engines (within a car model's options). Therefore, having additional horse power data in the set would have been desirable. Unfortunately, in many cases, it is impossible to add that information at a later point in time, since there is no reference to the original car listing included. In some cases, deriving the horse power from the other attributes might be possible. Usually, there will, however, be multiple choices, making it impossible to assign a value with 100% certainty.
+
+Another very important aspect is the **condition** of the car. As previously mentioned, without knowing about the amount of damage that has already been done to a car, it is virtually impossible to judge its value. **Color** would be another interesting aspect since black or white cars are easier to sell than pink ones and therefore worth more. For both of these aspects, it is unfortunately again impossible to obtain values for the existing data set.
+
+## Other Pre-Processing steps
+
+In the following section, we will prepare the dataset for modeling but applying the needed corrections identified before.
+
+#### Removing Outliers
+
+In 2c) we identified several entries that cannot be valid data. Next, we remove those entries from our data frame.
+
+First, there is one entry with a negative age.
+
+```{r}
+car_data <- car_data[car_data$age >= 0, ]
+```
+
+Next, we filter a few rows that seem unrealistic in terms of mileage and age.
+
+```{r}
+car_data <- car_data[!(car_data$mileage < 1000 & car_data$age > 5), ]
+```
+
+The filtering becomes a little more interesting for miles per gallon. A quick Internet research produced the following results. In 2020, new cars with a combustion engine should be able to achieve around 25 miles per gallon on average. Top performers among hybrid cars can manage up to around 60 miles per hour. Everything significantly higher than that is currently not possible. On the lower end, we looked up some high performance sports cars. Even for the most powerful cars like the Bugatti Chiron or the Lamborghini Aventador, fuel economy scores were around 10 miles per gallon.
+
+```{r}
+nrow(car_data[car_data$mpg > 60, ])
+```
+Unfortunately, the car listings in the dataset do not seem to agree with this information. Around one third of the car listings show MPG values higher than 60. Upon further inspection, we came to the conclusion that the MPG values from the listings might correspond to manufacturer ideal values that are practically unobtainable in real world use. For petrol cars, the the mean of the MPG values is about 50, which is way higher than expected.
+
+```{r}
+summary(car_data[car_data$fuelType == "Petrol", ]$mpg)
+```
+
+For hybrid cars, the quartiles were higher, as expected.
+```{r}
+summary(car_data[car_data$fuelType == "Hybrid", ]$mpg)
+```
+
+Our strategy to clean the data here therefore was to not remove overall outliers, but outliers per fuel type.
+
+```{r, echo=FALSE, include=FALSE}
+old_length <- length(car_data)
+```
+
+
+```{r}
+types <- distinct(car_data, car_data$fuelType)[, 1]$`car_data$fuelType`
+for (type in types) {
+  outliers <- boxplot(car_data[car_data$fuelType == type, ]$mpg, plot=FALSE)$out
+  if (length(outliers) > 0) {
+    car_data <- car_data[-which(car_data$mpg %in% outliers & car_data$fuelType == type),]
+  }
+}
+```
+This outlier removal procedure effectively filtered out `r old_length - length(car_data)` entries from the data frame.
+
 
 c. Describe other pre-processing steps considered, specifying which ones were applied or not applied due to which reason. (e.g. data cleansing, transformations, binning, scaling, outlier removal, attribute removal, transcoding, ...) at a level of detail that ensures reproducibility of changes to the data. (Code may be supplied as supplement to the submission in case you produce your own code)
 
