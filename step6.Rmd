@@ -429,24 +429,40 @@ summary(glm_model)$r.squared
 summary(gam_model)$r.sq
 ```
 
-```{r, out.width='0.98\\columnwidth'}
+```{r, echo=FALSE, predictionHistograms, out.width='0.98\\columnwidth'}
+par(mfcol = c(1, 2), cex = 0.7)
+hist(cleaned_test_data$price-glm_pred,breaks = 200,
+     main="GLM-Prediction errors")
+hist(cleaned_test_data$price-gam_pred,breaks = 200,
+     main="GAM-Prediction errors")
+par(mfcol = c(1, 1))
+```
+
+```{r, echo=FALSE, predictionBoxplots, out.width='0.98\\columnwidth'}
+par(mfcol = c(1, 2), cex = 0.7)
+glm_means<-((cleaned_test_data$price - glm_pred)/
+              cleaned_test_data$price)
+boxplot(glm_means * 100,
+        main="GLM-Predicion errors in %", outline=FALSE)
+gam_means <- ((cleaned_test_data$price - gam_pred)/
+                cleaned_test_data$price)
+boxplot(gam_means,
+        main="GAM-Prediction errors in %", outline=FALSE)
+par(mfcol = c(1, 1))
+```
+
+```{r}
+summary(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
+```
+
+
+```{r, glmscatter, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Scatter plot of GLM predictions vs true prices"}
 results <- data.frame(true = cleaned_test_data$price, gam = gam_pred, glm = glm_pred)
 ggplot(results,aes(x=true,y=glm)) + geom_point(alpha = 0.2) + xlab("actual price") + ylab("predicted price")
+```
+
+```{r, gamscatter, echo=FALSE, out.width='0.98\\columnwidth', fig.cap="Scatter plot of GAM predictions vs true prices"}
 ggplot(results,aes(x=true,y=gam)) + geom_point(alpha = 0.2) + xlab("actual price") + ylab("predicted price")
-
-hist(cleaned_test_data$price-glm_pred,breaks = 200)
-hist(cleaned_test_data$price-gam_pred,breaks = 200)
-
-mean(abs((cleaned_test_data$price - glm_pred)/cleaned_test_data$price))
-boxplot(cleaned_test_data$price - glm_pred)
-
-# mean(abs(cleaned_testing_data$price - tree_pred))
-# hist(abs(cleaned_testing_data$price - tree_pred),200)
-
-mean(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
-boxplot(cleaned_test_data$price - gam_pred)
-
-summary(abs((cleaned_test_data$price - gam_pred)/cleaned_test_data$price))
 ```
 
 # Evaluation
